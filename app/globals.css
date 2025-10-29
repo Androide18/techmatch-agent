@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Font sizes */
+  --text-sm: 12px;
+  --text-md: 16px;
+  --text-lg: 20px;
+
+  /* Breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+
+  /* Colors */
+  --color-bg: #081924;
+  --color-foreground: #ffffff;
+  --color-white: #ffffff;
+  --color-gray: #303e47;
+  --color-main-light-blue: #69c6e1;
+  --color-secondary-light-blue: #13f0fe;
+  --color-pink: #e745ff;
+  --color-secondary-pink: #cd65de;
+  --color-dark-pink: #b65cc5d9;
+  --color-bubble-bg: #69c7e19f;
+  --color-light-blue-shadow: #13eefe3b;
+  --color-dark-blue-shadow: #13f0fe1a;
+  --color-input-border: #06585b;
+  --color-input-bg: #08161b;
+  --color-option-selected-bg: #06585b;
+  --color-placeholder: #526469;
+
+  /* Gradients */
+--color-left-to-right-gradient: linear-gradient(90deg, #e745ff 0%, #13f0fe 100%);
+
+
+  /* Radius & padding */
+  --radius: 8px;
+  --padding: 8px 16px;
 }
 
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @theme inline {
+    --color-bg: #081924;
+    --color-foreground: #ffffff;
   }
 }
 
+/* Base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-bg text-foreground font-sans;
 }
