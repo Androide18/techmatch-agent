@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import InputBase from "@/app/components/Input";
-import { Button } from "../components/Button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface Result {
   id: number;
@@ -45,13 +46,16 @@ export default function TechMatchInput() {
 
   return (
     <div className="flex flex-col w-full max-w-lg mx-auto bg-bg p-6 rounded-[var(--radius)] shadow-[0_0_10px_var(--color-light-blue-shadow)]">
-      <InputBase
-        label="Escribe tu requerimiento"
-        placeholder='Ej: "Necesito un backend con NestJS y AWS"'
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
+      <div className="flex flex-col gap-2 w-full">
+        <Label htmlFor="requirement-input">Escribe tu requerimiento</Label>
+        <Input
+          id="requirement-input"
+          placeholder='Ej: "Necesito un backend con NestJS y AWS"'
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
 
       <Button
         onClick={handleSubmit}
