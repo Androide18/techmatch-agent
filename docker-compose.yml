@@ -1,0 +1,39 @@
+# This file defines the local PostgreSQL database for TechMatch development.
+# It uses an image that comes pre-installed with the pgvector extension.
+
+version: '3.8'
+
+services:
+  # This is the name of our database service
+  postgres-techmatch:
+    # We use a specific pgvector image to ensure vector support is built-in.
+    # Using a specific version (e.g., pg16) is good practice.
+    image: pgvector/pgvector:pg16
+
+    # The container will be named 'techmatch-db' for easy identification.
+    container_name: techmatch-db
+
+    # Environment variables to configure the PostgreSQL instance.
+    # These values are pulled from your .env file.
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    # This section maps a port from your local machine to the container.
+    # We map port 5433 on your machine to port 5432 inside the container.
+    # We use 5433 to avoid conflicts if you have another Postgres instance running.
+    ports:
+      - '${POSTGRES_PORT:-5433}:5432'
+
+    # This creates a 'volume' to persist your database data.
+    # Even if you stop and restart the container, your data will still be there.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    # This ensures the database container starts automatically if it crashes.
+    restart: unless-stopped
+
+# This defines the named volume we referenced above.
+volumes:
+  postgres-data:
