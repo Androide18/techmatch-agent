@@ -33,6 +33,18 @@
   --color-option-selected-bg: #06585b;
   --color-placeholder: #526469;
 
+  --color-secondary-1: #fff488;
+  --color-secondary-1-light: #fcf0ad;
+  --color-secondary-1-dark: #f6de5c;
+
+  --color-secondary-2: #d82e3e;
+  --color-secondary-2-light: #f4b3bb;
+  --color-secondary-2-dark: #7f2c2c;
+
+  --color-secondary-3: #f76735;
+  --color-secondary-3-light: #ffab91;
+  --color-secondary-3-dark: #8b4513;
+
   /* Gradients */
   --color-left-to-right-gradient: linear-gradient(
     90deg,
@@ -100,8 +112,9 @@ body {
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: #00deda;
+  --primary-light: #99f2f0;
+  --primary-dark: #15847f;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -125,6 +138,14 @@ body {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* New Palette Colors */
+  --palette-gray-light: #526069;
+  --palette-gray-dark: #182a36;
+  --palette-black: #050b0d;
+  --palette-fondo: #091d2a;
+
+  --palette-gradient: linear-gradient(-83deg, #07dfd8, #9aeca9);
 }
 
 .dark {
@@ -168,4 +189,8 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@utility sirius-gradient {
+  background-image: var(--palette-gradient);
 }

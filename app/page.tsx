@@ -7,10 +7,7 @@ export default function Home() {
       <section className="text-center max-w-3xl">
         <h1
           className="
-            text-5xl md:text-6xl font-extrabold mb-4
-            bg-[image:var(--color-left-to-right-gradient)]
-            bg-clip-text text-transparent
-          "
+            text-5xl md:text-6xl font-extrabold mb-4 sirius-gradient inline-block bg-clip-text text-transparent"
         >
           TechMatch Bot
         </h1>
@@ -32,8 +29,8 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="mt-20 max-w-5xl grid md:grid-cols-3 gap-8 text-center">
-        <div className="p-6 rounded-[var(--radius)] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] backdrop-blur-md shadow-[0_0_15px_var(--color-dark-blue-shadow)]">
-          <h3 className="text-xl font-semibold text-main-light-blue mb-2">
+        <div className="p-6 rounded-sm bg-bg border border-[rgba(255,255,255,0.1)] backdrop-blur-md shadow-[0_0_15px_var(--color-dark-blue-shadow)]">
+          <h3 className="text-xl font-semibold text-secondary-1 mb-2">
             Asignación Inteligente
           </h3>
           <p className="text-white text-sm">
@@ -42,8 +39,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="p-6 rounded-[var(--radius)] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] backdrop-blur-md shadow-[0_0_15px_var(--color-dark-blue-shadow)]">
-          <h3 className="text-xl font-semibold text-secondary-light-blue mb-2">
+        <div className="p-6 rounded-sm bg-bg border border-[rgba(255,255,255,0.1)] backdrop-blur-md shadow-[0_0_15px_var(--color-dark-blue-shadow)]">
+          <h3 className="text-xl font-semibold text-secondary-2 mb-2">
             Scoring Dinámico
           </h3>
           <p className="text-white text-sm">
@@ -52,8 +49,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="p-6 rounded-[var(--radius)] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] backdrop-blur-md shadow-[0_0_15px_var(--color-dark-blue-shadow)]">
-          <h3 className="text-xl font-semibold text-pink mb-2">
+        <div className="p-6 rounded-sm bg-bg border border-[rgba(255,255,255,0.1)] backdrop-blur-md shadow-[0_0_15px_var(--color-dark-blue-shadow)]">
+          <h3 className="text-xl font-semibold text-secondary-3 mb-2">
             Decisiones Basadas en Datos
           </h3>
           <p className="text-white text-sm">

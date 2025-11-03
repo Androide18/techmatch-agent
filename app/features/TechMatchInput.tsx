@@ -60,7 +60,7 @@ export default function TechMatchInput() {
       <Button
         onClick={handleSubmit}
         disabled={loading}
-        className="mt-4 w-full bg-[image:var(--color-left-to-right-gradient)] text-white hover:opacity-90"
+        className="mt-4 w-full sirius-gradient text-white hover:opacity-90"
       >
         {loading ? "Buscando..." : "Enviar"}
       </Button>
