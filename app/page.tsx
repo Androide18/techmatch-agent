@@ -1,4 +1,4 @@
-import TechMatchInput from "./features/TechMatchInput";
+import { TechMatchInput } from "./features/TechMatchInput";
 
 export default function Home() {
   return (
