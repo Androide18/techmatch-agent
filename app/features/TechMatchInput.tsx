@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { KeyboardEventHandler, useState } from 'react';
 import { ArrowUp, Plus, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -13,7 +13,13 @@ export function TechMatchInput({ onSubmit, isLoading }: TechMatchInputProps) {
   const [query, setQuery] = useState('');
 
   return (
-    <div className='max-w-4xl w-full p-3 bg-slate-700/20 rounded-4xl flex flex-col gap-3 border-2 border-gray-700 overflow-hidden relative'>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(query);
+      }}
+      className='max-w-4xl w-full p-3 bg-slate-700/20 rounded-4xl flex flex-col gap-3 border-2 border-gray-700 overflow-hidden relative'
+    >
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -30,13 +36,13 @@ export function TechMatchInput({ onSubmit, isLoading }: TechMatchInputProps) {
           <Plus />
         </div>
         <button
+          type='submit'
           className={cn(
             'border cursor-pointer border-gray-600 rounded-full p-1 transition-all',
             isLoading && 'border-gray-300 opacity-60',
             query.length === 0 && 'opacity-60 cursor-not-allowed'
           )}
           disabled={isLoading || !query.length}
-          onClick={() => onSubmit(query)}
         >
           {isLoading ? <Square /> : <ArrowUp />}
         </button>
@@ -48,6 +54,6 @@ export function TechMatchInput({ onSubmit, isLoading }: TechMatchInputProps) {
           isLoading ? 'animate-pulse -translate-y-10' : 'translate-y-10'
         )}
       />
-    </div>
+    </form>
   );
 }
