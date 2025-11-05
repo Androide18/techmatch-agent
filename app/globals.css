@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -16,7 +16,7 @@
   --breakpoint-xl: 1200px;
 
   /* Colors */
-  --color-bg: #081924;
+  --color-bg: #050b0d;
   --color-foreground: #ffffff;
   --color-white: #ffffff;
   --color-gray: #303e47;
@@ -94,7 +94,7 @@
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   @theme inline {
-    --color-bg: #081924;
+    --color-bg: #050b0d;
     --color-foreground: #ffffff;
   }
 }
@@ -145,7 +145,7 @@ body {
   --palette-black: #050b0d;
   --palette-fondo: #091d2a;
 
-  --palette-gradient: linear-gradient(-83deg, #07dfd8, #9aeca9);
+  --palette-gradient: linear-gradient(83deg, #07dfd8, #9aeca9);
 }
 
 .dark {
