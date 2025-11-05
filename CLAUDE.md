@@ -82,6 +82,7 @@ lib/
 ### Component Architecture
 
 **Component Export Convention**:
+
 - **Always use named exports** (non-default exports) for components to clarify imports and improve discoverability
 - Example: `export function MyComponent() {}` or `export const MyComponent = () => {}`
 - Avoid: `export default function MyComponent() {}`
@@ -113,12 +114,10 @@ The app uses a custom design system with CSS variables defined in `app/globals.c
 
 ```tsx
 // Custom variables
-className = "bg-bg text-main-light-blue";
-className = "bg-[image:var(--color-left-to-right-gradient)]";
-className = "rounded-[var(--radius)]";
+className = 'bg-bg text-main-light-blue';
 
 // shadcn variables (auto-configured)
-className = "border-border bg-background text-foreground";
+className = 'border-border bg-background text-foreground';
 ```
 
 ### Import Patterns
@@ -127,15 +126,15 @@ When working with components, use these import paths:
 
 ```tsx
 // shadcn UI components (always named exports)
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 // Utils
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 // Features (use named exports for new components)
-import { TechMatchInput } from "@/app/features/TechMatchInput";
+import { TechMatchInput } from '@/app/features/TechMatchInput';
 ```
 
 ## Key Implementation Details

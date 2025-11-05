@@ -1,8 +1,14 @@
 'use client';
 
-import { KeyboardEventHandler, useState } from 'react';
+import { useState } from 'react';
 import { ArrowUp, Plus, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion } from 'motion/react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface TechMatchInputProps {
   onSubmit: (query: string) => void;
@@ -11,9 +17,29 @@ interface TechMatchInputProps {
 
 export function TechMatchInput({ onSubmit, isLoading }: TechMatchInputProps) {
   const [query, setQuery] = useState('');
+  const [tooltipEnabled, setTooltipEnabled] = useState(false);
+
+  const isInputEmpty = query.length === 0;
+
+  const handleTooltipEnabled = (open: boolean) => {
+    if (isInputEmpty) {
+      setTooltipEnabled(open);
+    } else {
+      setTooltipEnabled(false);
+    }
+  };
 
   return (
-    <form
+    <motion.form
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      initial={{
+        translateY: 150,
+        opacity: 0,
+      }}
+      animate={{
+        translateY: 0,
+        opacity: 1,
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(query);
@@ -29,23 +55,38 @@ export function TechMatchInput({ onSubmit, isLoading }: TechMatchInputProps) {
       <div className='flex justify-between items-center'>
         <div
           className={cn(
-            'border cursor-pointer border-gray-600 rounded-full p-1 transition-all duration-500',
+            'border cursor-pointer border-gray-600 rounded-full p-1 transition-all duration-300 hover:-rotate-12 hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-gray-400',
             isLoading && 'border-gray-300'
           )}
         >
           <Plus />
         </div>
-        <button
-          type='submit'
-          className={cn(
-            'border cursor-pointer border-gray-600 rounded-full p-1 transition-all',
-            isLoading && 'border-gray-300 opacity-60',
-            query.length === 0 && 'opacity-60 cursor-not-allowed'
-          )}
-          disabled={isLoading || !query.length}
+        <Tooltip
+          open={tooltipEnabled}
+          onOpenChange={handleTooltipEnabled}
+          delayDuration={400}
         >
-          {isLoading ? <Square /> : <ArrowUp />}
-        </button>
+          <TooltipTrigger asChild>
+            <button
+              type='submit'
+              className={cn(
+                'border cursor-pointer border-gray-600 rounded-full p-1 transition-all duration-300',
+                isLoading && 'border-gray-300 opacity-60',
+                isInputEmpty &&
+                  'opacity-60 cursor-not-allowed hover:animate-shake',
+                !isLoading &&
+                  !isInputEmpty &&
+                  'hover:rotate-12 hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-gray-400'
+              )}
+              disabled={isLoading || isInputEmpty}
+            >
+              {isLoading ? <Square /> : <ArrowUp />}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Ingresa requerimientos para enviar el mensaje
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <div
@@ -54,6 +95,6 @@ export function TechMatchInput({ onSubmit, isLoading }: TechMatchInputProps) {
           isLoading ? 'animate-pulse -translate-y-10' : 'translate-y-10'
         )}
       />
-    </form>
+    </motion.form>
   );
 }
