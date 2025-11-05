@@ -1,10 +1,10 @@
-import { google } from '@ai-sdk/google';
-import { generateEmbedding } from './embedding';
-import { buildMatchingProfilesContext, fetchMatchingProfiles } from './utils';
-import { generateObject } from 'ai';
-import { profileSchema } from './schema';
+import { google } from "@ai-sdk/google";
+import { generateEmbedding } from "./embedding";
+import { buildMatchingProfilesContext, fetchMatchingProfiles } from "./utils";
+import { generateObject } from "ai";
+import { profileSchema } from "./schema";
 
-const CHAT_MODEL = 'gemini-2.5-flash-lite';
+const CHAT_MODEL = "gemini-2.5-flash-lite";
 
 export async function POST(req: Request) {
   const message = await req.json();
@@ -21,10 +21,11 @@ export async function POST(req: Request) {
     // Use generateObject to structure the data
     const result = await generateObject({
       model: google(CHAT_MODEL),
-      output: 'array',
+      output: "array",
       schema: profileSchema,
+      temperature: 0,
       prompt: `
-        Analiza los siguientes perfiles de desarrolladores y estructura la información en el formato solicitado.
+        Estructura la información de los siguientes perfiles de desarrolladores en el formato solicitado.
 
         Requerimiento del usuario: "${message}"
 
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
 
     return Response.json(result.object);
   } catch (error) {
-    console.error('Error in search API:', error);
-    return new Response('Error processing search', { status: 500 });
+    console.error("Error in search API:", error);
+    return new Response("Error processing search", { status: 500 });
   }
 }

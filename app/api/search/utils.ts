@@ -17,7 +17,7 @@ export const fetchMatchingProfiles = async ({
       FROM employee_profiles_techmatch
       ORDER BY similarity DESC
     ) t
-    WHERE t.similarity > 0.72
+    WHERE t.similarity > 0.62
   `;
 
   return matchingProfiles;
