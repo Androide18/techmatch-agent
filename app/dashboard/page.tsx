@@ -4,7 +4,7 @@ import z from 'zod';
 import { profileSchema } from '../api/search/schema';
 import { TechMatchInput } from '../features/TechMatchInput';
 import { experimental_useObject as useObject } from '@ai-sdk/react';
-import { Loader } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { ProfileCard } from './components/profile-card';
 import { Button } from '@/components/ui/button';
@@ -44,12 +44,12 @@ export default function Home() {
 
       <section className='flex-1 flex items-center w-full justify-center flex-col gap-10 z-10'>
         {isLoading && (
-          <div className='flex flex-col gap-2'>
-            <Loader className='animate-spin' />
+          <div className='flex flex-col gap-2 justify-center items-center'>
+            <Loader2 className='animate-spin' />
             <span>Evaluando perfiles...</span>
           </div>
         )}
-        {!userHasAsked ? (
+        {!userHasAsked && !isLoading ? (
           <div className='max-w-4xl text-center flex flex-col gap-2'>
             <h3 className='text-3xl font-semibold text-balance'>
               Busca el perfil justo para ese puesto
