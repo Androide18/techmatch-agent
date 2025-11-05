@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { ProfileCard } from './components/profile-card';
 import { Button } from '@/components/ui/button';
 import { motion } from 'motion/react';
+import { InfoCard } from './components/info-card';
 
 export default function Home() {
   const [userHasAsked, setUserHasAsked] = useState(false);
@@ -79,9 +80,39 @@ export default function Home() {
           </div>
         )}
         {!userHasAsked && (
-          <TechMatchInput onSubmit={submit} isLoading={isLoading} />
+          <div className='flex flex-col items-center gap-10'>
+            <TechMatchInput onSubmit={submit} isLoading={isLoading} />
+
+            {/* Info Cards */}
+            <div className='flex gap-4'>
+              <InfoCard
+                title='Asignación Inteligente'
+                description='Encuentra automáticamente el mejor candidato para cada proyecto
+            según skills, experiencia y carga actual.'
+                color='text-secondary-1'
+              />
+
+              <InfoCard
+                title='Scoring Dinámico'
+                description='Calcula un score de compatibilidad para priorizar candidatos según
+            experiencia real y afinidad tecnológica.'
+                color='text-secondary-2'
+              />
+
+              <InfoCard
+                title='Decisiones Basadas en Datos'
+                description='Reduce el sesgo manual y toma decisiones más rápidas y precisas con
+            evidencia del historial de proyectos.'
+                color='text-secondary-3'
+              />
+            </div>
+          </div>
         )}
       </section>
+
+      <div className='absolute bottom-50 -translate-x-1/2 w-96 h-96 left-1/2 -z-10 mask-b-from-50% mask-t-from-50% mask-l-from-50% mask-r-from-50% opacity-40'>
+        <img src='./sirius-logo.svg' />
+      </div>
     </main>
   );
 }

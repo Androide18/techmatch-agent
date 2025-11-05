@@ -44,7 +44,7 @@ export function TechMatchInput({ onSubmit, isLoading }: TechMatchInputProps) {
         e.preventDefault();
         onSubmit(query);
       }}
-      className='max-w-4xl w-full p-3 bg-slate-700/20 rounded-4xl flex flex-col gap-3 border-2 border-gray-700 overflow-hidden relative'
+      className='max-w-4xl w-full p-3 bg-slate-700/20 backdrop-blur-lg rounded-4xl flex flex-col gap-3 border-2 border-gray-700 overflow-hidden relative'
     >
       <input
         value={query}
