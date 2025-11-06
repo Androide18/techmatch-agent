@@ -50,7 +50,7 @@ export default function Home() {
       <section className='flex-1 z-10 relative justify-center items-center gap-52 flex flex-col'>
         <AnimatePresence>
           {!userHasAsked && !isLoading && (
-            <div className='justify-end max-w-4xl text-center flex flex-col gap-2'>
+            <div className='flex-1 min-h-42 justify-end max-w-4xl text-center flex flex-col gap-2'>
               <motion.h3
                 initial={{ y: 70, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -85,47 +85,46 @@ export default function Home() {
         )}
 
         {!userHasAsked && (
-          <motion.div
-            className='w-full absolute left-1/2 -translate-x-1/2'
-            transition={springTransition(isLoading ? 0.5 : 0)}
-            variants={{ visible, hidden }}
-            initial='hidden'
-            animate={{
-              opacity: 1,
-              y: isLoading ? 100 : 0,
-              ...(isLoading && { bottom: 120 }),
-            }}
-          >
-            <TechMatchInput
-              onSubmit={submit}
-              isLoading={isLoading}
-              onStop={stop}
-            />
-          </motion.div>
-        )}
-
-        {!userHasAsked && (
-          <AnimatePresence>
-            {!isLoading && (
-              <motion.div
-                variants={list}
-                initial='hidden'
-                animate='visible'
-                exit='hidden'
-                transition={{ delay: 0.3 }}
-                className='flex gap-4'
-              >
-                {information.map((card) => (
-                  <InfoCard
-                    key={card.id}
-                    title={card.title}
-                    description={card.description}
-                    color={card.color}
-                  />
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div className='relative w-full h-full'>
+            <motion.div
+              className='w-full absolute bottom-[110%] left-1/2 -translate-x-1/2 z-20'
+              transition={springTransition(isLoading ? 0.5 : 0)}
+              variants={{ visible, hidden }}
+              initial='hidden'
+              animate={{
+                opacity: 1,
+                y: isLoading ? 100 : 0,
+                ...(isLoading && { bottom: 120 }),
+              }}
+            >
+              <TechMatchInput
+                onSubmit={submit}
+                isLoading={isLoading}
+                onStop={stop}
+              />
+            </motion.div>
+            <AnimatePresence>
+              {!isLoading && (
+                <motion.div
+                  variants={list}
+                  initial='hidden'
+                  animate='visible'
+                  exit='hidden'
+                  transition={{ delay: 0.3 }}
+                  className='flex gap-4'
+                >
+                  {information.map((card) => (
+                    <InfoCard
+                      key={card.id}
+                      title={card.title}
+                      description={card.description}
+                      color={card.color}
+                    />
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
       </section>
 
