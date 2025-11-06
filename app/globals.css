@@ -114,6 +114,9 @@
       transform: translate3d(2px, 0, 0);
     }
   }
+
+  /* Font Families */
+  --font-inter: 'Inter', sans-serif;
 }
 
 /* Dark mode */
