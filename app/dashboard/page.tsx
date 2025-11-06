@@ -4,7 +4,6 @@ import z from 'zod';
 import { profileSchema } from '../api/search/schema';
 import { TechMatchInput } from '../features/TechMatchInput';
 import { experimental_useObject as useObject } from '@ai-sdk/react';
-import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { ProfileCard } from './components/profile-card';
 import { Button } from '@/components/ui/button';
@@ -47,7 +46,7 @@ export default function Home() {
         )}
       </nav>
 
-      <section className='flex-1 z-10 relative justify-center items-center gap-52 flex flex-col'>
+      <section className='flex-1 z-10 justify-center items-center gap-52 flex flex-col relative'>
         <AnimatePresence>
           {!userHasAsked && !isLoading && (
             <div className='flex-1 min-h-42 justify-end max-w-4xl text-center flex flex-col gap-2'>
@@ -88,7 +87,7 @@ export default function Home() {
           <div className='relative w-full h-full'>
             <motion.div
               className='w-full absolute bottom-[110%] left-1/2 -translate-x-1/2 z-20'
-              transition={springTransition(isLoading ? 0.5 : 0)}
+              transition={springTransition(isLoading ? 0.4 : 0)}
               variants={{ visible, hidden }}
               initial='hidden'
               animate={{
@@ -130,14 +129,35 @@ export default function Home() {
 
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
+        animate={{ opacity: 1.0 }}
         transition={{ delay: 0.95, duration: 1, ease: 'easeOut' }}
         className={cn(
-          'absolute top-60 -translate-x-1/2 w-96 h-96 left-1/2 -z-10 mask-b-from-50% mask-t-from-50% mask-l-from-50% mask-r-from-50% transition-all duration-500',
-          isLoading && 'w-40 h-40 animate-[spin_2s_linear_infinite_200ms]'
+          'absolute top-60 -translate-x-1/2 left-1/2 flex flex-col items-center w-full'
         )}
       >
-        <img src='./sirius-logo.svg' />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4 }}
+          className='-z-10 mask-b-from-50% mask-t-from-50% mask-l-from-50% mask-r-from-50% transition duration-500'
+        >
+          <img
+            src='./sirius-logo.svg'
+            className={cn(
+              'w-96 h-96 transition-all duration-500',
+              isLoading && 'w-40 h-40 animate-[spin_2s_linear_infinite_200ms]'
+            )}
+          />
+        </motion.div>
+        {isLoading && (
+          <motion.p
+            transition={{ delay: 0.75, type: 'spring', bounce: 0.25 }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 0.8, y: 0 }}
+            className='z-40 text-xl absolute left-1/2 -translate-x-1/2 -bottom-10 tracking-wide bg-linear-to-br from-primary to-lime-200 bg-clip-text text-transparent  whitespace-nowrap'
+          >
+            Evaluando perfiles
+          </motion.p>
+        )}
       </motion.div>
     </main>
   );

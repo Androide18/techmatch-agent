@@ -20,7 +20,7 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className='bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30 transition-all duration-300'>
+    <div className='bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30 transition-all duration-300'>
       <div className='flex gap-4 items-start'>
         {/* Profile Picture */}
         <div className='shrink-0'>
@@ -31,7 +31,7 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
               className='w-16 h-16 rounded-full object-cover border-2 border-main-light-blue/20'
             />
           ) : (
-            <div className='w-16 h-16 rounded-full bg-gradient-to-br from-pink/20 to-main-light-blue/20 flex items-center justify-center border-2 border-main-light-blue/20'>
+            <div className='w-16 h-16 rounded-full bg-linear-to-br from-pink/20 to-main-light-blue/20 flex items-center justify-center border-2 border-main-light-blue/20'>
               <span className='text-xl font-bold text-main-light-blue'>
                 {profile?.fullName
                   ?.split(' ')
