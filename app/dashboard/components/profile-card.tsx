@@ -9,6 +9,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { ChevronDown, Mail } from 'lucide-react';
+import { motion } from 'motion/react';
 
 type Profile = z.infer<typeof profileSchema>;
 
@@ -20,7 +21,12 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className='bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30 transition-all duration-300'>
+    <motion.div
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 100 }}
+      className='bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30 transition-all duration-300'
+    >
       <div className='flex gap-4 items-start'>
         {/* Profile Picture */}
         <div className='shrink-0'>
@@ -155,6 +161,6 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
           </Collapsible>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

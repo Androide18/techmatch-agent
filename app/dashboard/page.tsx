@@ -7,7 +7,7 @@ import { experimental_useObject as useObject } from '@ai-sdk/react';
 import { useState } from 'react';
 import { ProfileCard } from './components/profile-card';
 import { Button } from '@/components/ui/button';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, stagger } from 'motion/react';
 import { InfoCard } from './components/info-card';
 import { hidden, list, springTransition, visible } from './animations';
 import { information } from './constants';
@@ -46,7 +46,11 @@ export default function Home() {
         )}
       </nav>
 
-      <section className='flex-1 z-10 justify-center items-center gap-52 flex flex-col relative'>
+      <motion.section
+        layout
+        style={{ justifyContent: userHasAsked ? 'flex-start' : 'center' }}
+        className='flex-1 z-10 justify-center items-center gap-52 flex flex-col relative'
+      >
         <AnimatePresence>
           {!userHasAsked && !isLoading && (
             <div className='flex-1 min-h-42 justify-end max-w-4xl text-center flex flex-col gap-2'>
@@ -74,14 +78,28 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        {userHasAsked && object && object.length > 0 && (
-          <div className='w-full max-w-5xl space-y-4'>
-            {object?.map((item, index) => (
-              // @ts-expect-error profile interface matches
-              <ProfileCard key={index} profile={item} />
-            ))}
-          </div>
-        )}
+        <AnimatePresence mode='sync'>
+          {userHasAsked && object && object.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{
+                opacity: 0,
+                transition: {
+                  when: 'afterChildren',
+                  delayChildren: stagger(0.15),
+                },
+              }}
+              transition={{ type: 'spring', bounce: 0.25, duration: 1 }}
+              className='w-full max-w-5xl space-y-4'
+            >
+              {object?.map((item, index) => (
+                // @ts-expect-error profile interface matches
+                <ProfileCard key={index} profile={item} />
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {!userHasAsked && (
           <div className='relative w-full h-full'>
@@ -125,7 +143,7 @@ export default function Home() {
             </AnimatePresence>
           </div>
         )}
-      </section>
+      </motion.section>
 
       <motion.div
         initial={{ opacity: 0 }}
