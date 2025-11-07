@@ -1,7 +1,7 @@
 import { google } from '@ai-sdk/google';
 import { generateEmbedding } from './embedding';
 import { buildMatchingProfilesContext, fetchMatchingProfiles } from './utils';
-import { generateObject } from 'ai';
+import { streamObject } from 'ai';
 import { profileSchema } from './schema';
 
 const CHAT_MODEL = 'gemini-2.5-flash-lite';
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const context = buildMatchingProfilesContext(matchingProfiles);
 
     // Use generateObject to structure the data
-    const result = await generateObject({
+    const result = await streamObject({
       model: google(CHAT_MODEL),
       output: 'array',
       schema: profileSchema,
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       `,
     });
 
-    return Response.json(result.object);
+    return result.toTextStreamResponse();
   } catch (error) {
     console.error('Error in search API:', error);
     return new Response('Error processing search', { status: 500 });
