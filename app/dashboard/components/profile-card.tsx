@@ -11,6 +11,8 @@ import {
 import { ChevronDown, Mail } from 'lucide-react';
 import { motion } from 'motion/react';
 import { springTransition } from '../animations';
+import { ImageWithFallback } from '@/components/ui/image-with-fallback';
+import { getFullNameInitials } from '@/lib/utils';
 
 type Profile = z.infer<typeof profileSchema>;
 
@@ -33,10 +35,11 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
         {/* Profile Picture */}
         <div className='shrink-0'>
           {profile?.profilePictureUrl ? (
-            <img
+            <ImageWithFallback
               src={profile?.profilePictureUrl}
-              alt={profile?.fullName ?? 'user photo'}
               className='w-16 h-16 rounded-full object-cover border-2 border-main-light-blue/20'
+              fallbackText={getFullNameInitials(profile?.fullName)}
+              alt={profile?.fullName ?? 'user photo'}
             />
           ) : (
             <div className='w-16 h-16 rounded-full bg-linear-to-br from-pink/20 to-main-light-blue/20 flex items-center justify-center border-2 border-main-light-blue/20'>
