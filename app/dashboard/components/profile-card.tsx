@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/collapsible';
 import { ChevronDown, Mail } from 'lucide-react';
 import { motion } from 'motion/react';
+import { springTransition } from '../animations';
 
 type Profile = z.infer<typeof profileSchema>;
 
@@ -22,10 +23,11 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 100 }}
+      layout
+      initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 100 }}
-      className='bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30 transition-all duration-300'
+      transition={springTransition()}
+      className='min-h-[180px] bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30'
     >
       <div className='flex gap-4 items-start'>
         {/* Profile Picture */}

@@ -7,8 +7,6 @@ const inter = Inter({
   subsets: ['latin'],
 });
 
-console.log(inter.variable);
-
 const poppins = Poppins({
   weight: ['400', '500', '600'],
 });

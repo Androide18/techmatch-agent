@@ -27,3 +27,12 @@ export const list = {
     },
   },
 };
+
+export const profileList = {
+  visible: {
+    opacity: 1,
+  },
+  hidden: {
+    opacity: 0,
+  },
+};

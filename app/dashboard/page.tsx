@@ -7,22 +7,37 @@ import { experimental_useObject as useObject } from '@ai-sdk/react';
 import { useState } from 'react';
 import { ProfileCard } from './components/profile-card';
 import { Button } from '@/components/ui/button';
-import { AnimatePresence, motion, stagger } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { InfoCard } from './components/info-card';
-import { hidden, list, springTransition, visible } from './animations';
+import {
+  hidden,
+  list,
+  profileList,
+  springTransition,
+  visible,
+} from './animations';
 import { information } from './constants';
 import { cn } from '@/lib/utils';
+import { ProfileCardSkeleton } from './components/profile-card-skeleton';
+import { Loader2 } from 'lucide-react';
 
 export default function Home() {
-  const [userHasAsked, setUserHasAsked] = useState(false);
+  const [requestFinished, setRequestFinished] = useState(false);
 
-  const { isLoading, object, submit, stop } = useObject({
+  const { isLoading, object, clear, submit, stop } = useObject({
     api: '/api/search',
     schema: z.array(profileSchema),
     onFinish: () => {
-      setUserHasAsked(true);
+      setRequestFinished(true);
     },
   });
+
+  const hasItems = object && object.length > 0;
+
+  const handleNewSearch = () => {
+    setRequestFinished(false);
+    clear();
+  };
 
   return (
     <main className='py-6 px-4 gap-10 max-w-7xl mx-auto flex flex-col h-dvh relative'>
@@ -37,10 +52,15 @@ export default function Home() {
           </h2>
         </div>
 
-        {userHasAsked && (
-          <div>
-            <Button onClick={() => setUserHasAsked(false)}>
-              Realizar otra busqueda
+        {hasItems && (
+          <div className='flex items-center gap-10'>
+            {isLoading && (
+              <span className='flex items-center gap-2 text-gray-400'>
+                Evaluando Perfiles <Loader2 className='animate-spin' />
+              </span>
+            )}
+            <Button disabled={isLoading} onClick={handleNewSearch}>
+              Realizar otra búsqueda
             </Button>
           </div>
         )}
@@ -48,11 +68,11 @@ export default function Home() {
 
       <motion.section
         layout
-        style={{ justifyContent: userHasAsked ? 'flex-start' : 'center' }}
+        style={{ justifyContent: requestFinished ? 'flex-start' : 'center' }}
         className='flex-1 z-10 justify-center items-center gap-52 flex flex-col relative'
       >
         <AnimatePresence>
-          {!userHasAsked && !isLoading && (
+          {!requestFinished && !isLoading && (
             <div className='flex-1 min-h-42 justify-end max-w-4xl text-center flex flex-col gap-2'>
               <motion.h3
                 initial={{ y: 70, opacity: 0 }}
@@ -78,48 +98,54 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        <AnimatePresence mode='sync'>
-          {userHasAsked && object && object.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{
-                opacity: 0,
-                transition: {
-                  when: 'afterChildren',
-                  delayChildren: stagger(0.15),
-                },
-              }}
-              transition={{ type: 'spring', bounce: 0.25, duration: 1 }}
-              className='w-full max-w-5xl space-y-4'
-            >
-              {object?.map((item, index) => (
-                // @ts-expect-error profile interface matches
-                <ProfileCard key={index} profile={item} />
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {hasItems && (
+          <motion.div
+            variants={profileList}
+            initial='hidden'
+            animate='visible'
+            exit='hidden'
+            layout
+            className='w-full max-w-5xl flex flex-col gap-10'
+          >
+            {object?.map((item) => (
+              // @ts-expect-error profile is good
+              <ProfileCard key={item?.fullName.trim()} profile={item} />
+            ))}
+            {!requestFinished && <ProfileCardSkeleton />}
+          </motion.div>
+        )}
 
-        {!userHasAsked && (
+        {!requestFinished && (
           <div className='relative w-full h-full'>
-            <motion.div
-              className='w-full absolute bottom-[110%] left-1/2 -translate-x-1/2 z-20'
-              transition={springTransition(isLoading ? 0.4 : 0)}
-              variants={{ visible, hidden }}
-              initial='hidden'
-              animate={{
-                opacity: 1,
-                y: isLoading ? 100 : 0,
-                ...(isLoading && { bottom: 120 }),
-              }}
-            >
-              <TechMatchInput
-                onSubmit={submit}
-                isLoading={isLoading}
-                onStop={stop}
-              />
-            </motion.div>
+            <AnimatePresence>
+              {!hasItems && (
+                <motion.div
+                  className='w-full absolute bottom-[110%] left-1/2 -translate-x-1/2 z-20'
+                  transition={springTransition(isLoading ? 0.4 : 0)}
+                  variants={{ visible, hidden }}
+                  initial='hidden'
+                  animate={{
+                    opacity: 1,
+                    y: isLoading ? 100 : 0,
+                    ...(isLoading && { bottom: 120 }),
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: 100,
+                    transition: {
+                      duration: 0.25,
+                      ease: 'easeOut',
+                    },
+                  }}
+                >
+                  <TechMatchInput
+                    onSubmit={submit}
+                    isLoading={isLoading}
+                    onStop={stop}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
             <AnimatePresence>
               {!isLoading && (
                 <motion.div
@@ -162,20 +188,25 @@ export default function Home() {
             src='./sirius-logo.svg'
             className={cn(
               'w-96 h-96 transition-all duration-500',
-              isLoading && 'w-40 h-40 animate-[spin_2s_linear_infinite_200ms]'
+              isLoading &&
+                !hasItems &&
+                'w-40 h-40 animate-[spin_2s_linear_infinite_200ms]'
             )}
           />
         </motion.div>
-        {isLoading && (
-          <motion.p
-            transition={{ delay: 0.75, type: 'spring', bounce: 0.25 }}
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 0.8, y: 0 }}
-            className='z-40 text-xl absolute left-1/2 -translate-x-1/2 -bottom-10 tracking-wide bg-linear-to-br from-primary to-lime-200 bg-clip-text text-transparent  whitespace-nowrap'
-          >
-            Evaluando perfiles
-          </motion.p>
-        )}
+        <AnimatePresence>
+          {isLoading && !hasItems && (
+            <motion.p
+              transition={{ delay: 0.5, type: 'spring', bounce: 0.25 }}
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 0.8, y: 0 }}
+              exit={{ opacity: 0, y: 100, transition: { delay: 0.0 } }}
+              className='z-40 text-xl absolute left-1/2 -translate-x-1/2 -bottom-10 tracking-wide bg-linear-to-br from-primary to-lime-200 bg-clip-text text-transparent  whitespace-nowrap'
+            >
+              Evaluando perfiles
+            </motion.p>
+          )}
+        </AnimatePresence>
       </motion.div>
     </main>
   );
