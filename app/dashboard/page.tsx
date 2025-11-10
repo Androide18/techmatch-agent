@@ -20,11 +20,13 @@ import { information } from "./constants";
 import { cn } from "@/lib/utils";
 import { ProfileCardSkeleton } from "./components/profile-card-skeleton";
 import { Loader2 } from "lucide-react";
+import { TokenConsole } from "./components/token-console";
 
 export default function Home() {
   const [requestFinished, setRequestFinished] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [tokensUsed, setTokensUsed] = useState(null);
 
   const { isLoading, object, clear, submit, stop } = useObject({
     api: "/api/search",
@@ -74,9 +76,11 @@ export default function Home() {
           return;
         }
 
-        const { text } = await pdfResponse.json();
+        const { text, tokens } = await pdfResponse.json();
+        console.log("RES TOKENS:", tokens);
         console.log("Extracted PDF text:", text.slice(0, 200));
 
+        setTokensUsed(tokens);
         submit({ input: text });
       } catch (err) {
         console.error("Error processing PDF:", err);
@@ -159,8 +163,9 @@ export default function Home() {
           >
             {object?.map((item, index) => (
               // @ts-expect-error profile is good
-              <ProfileCard key={`${ item?.id || item?.fullName?.trim() || "profile"}-${index}`} profile={item} />
+              <ProfileCard key={`${ item?.id || item?.fullName?.trim() || "profile"}-${index}`} profile={item} /> 
             ))}
+
             {!requestFinished && <ProfileCardSkeleton />}
           </motion.div>
         )}
@@ -269,6 +274,7 @@ export default function Home() {
           )}
         </AnimatePresence>
       </motion.div>
+      <TokenConsole tokensUsed={tokensUsed} />
     </main>
   );
 }

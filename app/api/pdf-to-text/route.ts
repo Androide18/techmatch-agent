@@ -114,7 +114,13 @@ in the style of: "Necesito un desarrollador experto en React y Tailwind".
 
     const text = summary.text.trim();
 
-    return NextResponse.json({ text });
+    return NextResponse.json({
+      text,
+      tokens: {
+        validation: validation.usage,
+        summary: summary.usage,
+      },
+    });
   } catch (error) {
     console.error("Error in PDF-to-text API:", error);
     return NextResponse.json(
