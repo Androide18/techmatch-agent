@@ -1,5 +1,5 @@
-import { sql } from '@/lib/db';
-import { Profile } from './types';
+import { sql } from "@/lib/db";
+import { Profile } from "./types";
 
 export const fetchMatchingProfiles = async ({
   embedding,
@@ -26,14 +26,14 @@ export const fetchMatchingProfiles = async ({
 export const buildMatchingProfilesContext = (
   profiles: Array<Profile>
 ): string => {
-  return profiles.map(buildProfileContext).join('\n');
+  return profiles.map(buildProfileContext).join("\n");
 };
 
 export const buildProfileContext = (profile: Profile, index: number) => {
   const similarityScore = (profile.similarity * 100).toFixed(1);
 
   const metadata =
-    typeof profile.metadata === 'string'
+    typeof profile.metadata === "string"
       ? JSON.parse(profile.metadata)
       : profile.metadata;
 
@@ -42,11 +42,34 @@ export const buildProfileContext = (profile: Profile, index: number) => {
     ${profile.content}
 
     Additional Metadata:
-    - Email: ${metadata.email || 'N/A'}
-    - Location: ${metadata.location || 'N/A'}
-    - Office: ${metadata.office || 'N/A'}
-    - Profile Picture URL: ${metadata.profile_picture_url || 'N/A'}
+    - Email: ${metadata.email || "N/A"}
+    - Location: ${metadata.location || "N/A"}
+    - Office: ${metadata.office || "N/A"}
+    - Profile Picture URL: ${metadata.profile_picture_url || "N/A"}
     - Similarity Score: ${similarityScore}%
     --------------------
   `;
+};
+
+export const cleanPdfText = (text: string) => {
+  if (!text) return "";
+
+  let cleaned = text;
+
+  // 1. Remove extra spaces, tabs, newlines
+  cleaned = cleaned.replace(/\s+/g, " ");
+
+  // 2. Fix PDFs that split letters: "J o b" -> "Job"
+  cleaned = cleaned.replace(/\b([A-Za-z]) (?=[A-Za-z]\b)/g, "$1");
+
+  // 3. Ensure space after punctuation (like ":")
+  cleaned = cleaned.replace(/([.,;!?])(?=\S)/g, "$1 ");
+
+  // 4. Remove space before punctuation
+  cleaned = cleaned.replace(/\s+([.,;!?])/g, "$1");
+
+  // 5. Trim
+  cleaned = cleaned.trim();
+
+  return cleaned;
 };

@@ -1,16 +1,22 @@
-import { google } from '@ai-sdk/google';
-import { generateEmbedding } from './embedding';
-import { buildMatchingProfilesContext, fetchMatchingProfiles } from './utils';
-import { streamObject } from 'ai';
-import { profileSchema } from './schema';
+import { google } from "@ai-sdk/google";
+import { generateEmbedding } from "./embedding";
+import { buildMatchingProfilesContext, fetchMatchingProfiles } from "./utils";
+import { streamObject } from "ai";
+import { profileSchema } from "./schema";
 
-const CHAT_MODEL = 'gemini-2.5-flash-lite';
+const CHAT_MODEL = "gemini-2.5-flash-lite";
 
 export async function POST(req: Request) {
-  const message = await req.json();
-
   try {
-    const queryEmbedding = await generateEmbedding({ query: message });
+    const message = await req.json();
+    const userQuery =
+      typeof message === "string" ? message : message.input || "";
+
+    if (!userQuery || typeof userQuery !== "string") {
+      return new Response("Invalid input", { status: 400 });
+    }
+
+    const queryEmbedding = await generateEmbedding({ query: userQuery });
 
     const matchingProfiles = await fetchMatchingProfiles({
       embedding: queryEmbedding,
@@ -21,13 +27,13 @@ export async function POST(req: Request) {
     // Use generateObject to structure the data
     const result = await streamObject({
       model: google(CHAT_MODEL),
-      output: 'array',
+      output: "array",
       schema: profileSchema,
       temperature: 0,
       prompt: `
         Estructura la información de los siguientes perfiles de desarrolladores en el formato solicitado.
 
-        Requerimiento del usuario: "${message}"
+        Requerimiento del usuario: "${userQuery}"
 
         Perfiles encontrados:
         ${context}
@@ -44,7 +50,7 @@ export async function POST(req: Request) {
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error('Error in search API:', error);
-    return new Response('Error processing search', { status: 500 });
+    console.error("Error in search API:", error);
+    return new Response("Error processing search", { status: 500 });
   }
 }
