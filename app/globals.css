@@ -91,7 +91,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   /* Animations */
-  --animate-shake: shake 500ms ease-in-out;
+  --animate-shake: shake 350ms ease-in-out;
   @keyframes shake {
     10%,
     90% {
@@ -106,12 +106,12 @@
     30%,
     50%,
     70% {
-      transform: translate3d(-2px, 0, 0);
+      transform: translate3d(-1px, 0, 0);
     }
 
     40%,
     60% {
-      transform: translate3d(2px, 0, 0);
+      transform: translate3d(1px, 0, 0);
     }
   }
 
