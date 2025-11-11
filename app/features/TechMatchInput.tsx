@@ -114,11 +114,11 @@ export function TechMatchInput({
           onChange={(e) => setQuery(e.target.value)}
           rows={2}
           className={cn(
-            'resize-none max-h-42 border-none outline-none w-full relative z-10 bg-transparent field-sizing-content',
+            'resize-none max-h-32 border-none outline-none w-full relative z-10 bg-transparent field-sizing-content',
             selectedFile || isProcessingPdf ? 'pl-0 cursor-not-allowed' : 'pl-2'
           )}
           placeholder={
-            selectedFile || isProcessingPdf
+            selectedFile || isLoading
               ? ''
               : 'Escribe los requerimientos del puesto'
           }
@@ -202,10 +202,8 @@ export function TechMatchInput({
 
       <div
         className={cn(
-          'bg-linear-to-r from-primary to-lime-200 h-full w-full absolute -bottom-26 blur-xl rounded-full left-1/2 -translate-x-1/2 -z-10 transition-all duration-500 ease-in-out',
-          isLoading
-            ? 'animate-pulse -translate-y-3 opacity-80'
-            : 'translate-y-10 opacity-0'
+          'bg-linear-to-r from-primary to-lime-200 h-full w-full absolute top-full blur-xl rounded-full left-1/2 -translate-x-1/2 -z-10 transition-all duration-500 ease-in-out',
+          isLoading ? 'animate-pulse -translate-y-3' : 'translate-y-10'
         )}
       />
     </form>

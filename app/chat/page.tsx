@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   return (
-    <main className='pt-6 pb-10 px-4 gap-10 max-w-7xl mx-auto flex flex-col h-dvh relative'>
+    <main className='py-6 px-4 gap-0 max-w-7xl mx-auto flex flex-col h-dvh relative'>
       {/* Hero Section */}
       <nav className='flex justify-between items-center w-full'>
         <div>
@@ -81,11 +81,11 @@ export default function Home() {
       <motion.section
         layout
         style={{ justifyContent: requestFinished ? 'flex-start' : 'center' }}
-        className='flex-1 z-10 justify-center items-center gap-52 flex flex-col relative'
+        className='flex-1 z-10 justify-center items-center gap-32 flex flex-col relative'
       >
         <AnimatePresence>
           {!requestFinished && !isLoading && (
-            <div className='flex-1 min-h-42 justify-center max-w-4xl text-center flex flex-col gap-2'>
+            <div className='h-full justify-center max-w-4xl text-center flex flex-col gap-2'>
               <motion.h3
                 initial={{ y: 70, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -140,12 +140,12 @@ export default function Home() {
         )}
 
         {!requestFinished && (
-          <div className='relative w-full'>
+          <div className='relative w-full h-full flex-col justify-end flex'>
             <AnimatePresence>
               {!hasItems && (
                 <motion.div
                   key='input'
-                  className='w-full absolute bottom-[115%] left-1/2 -translate-x-1/2 z-20'
+                  className='w-full absolute bottom-[calc(100%)] left-1/2 -translate-x-1/2 z-20'
                   transition={springTransition(isLoading ? 0.4 : 0)}
                   variants={{ visible, hidden }}
                   initial='hidden'
