@@ -98,7 +98,7 @@ export function TechMatchInput({
         if (!query.trim()) return;
         onSubmit(query);
       }}
-      className='max-w-4xl mx-auto w-full p-3 bg-slate-700/20 backdrop-blur-lg rounded-2xl flex flex-col gap-3 border-2 border-gray-700 overflow-hidden relative'
+      className='max-w-4xl mx-auto w-full p-3 bg-slate-700/20 backdrop-blur-lg rounded-2xl flex flex-col gap-3 border border-gray-700 overflow-hidden relative'
     >
       <input
         type='file'
@@ -109,11 +109,12 @@ export function TechMatchInput({
       />
       <div className='relative w-full'>
         {/* Input */}
-        <input
+        <textarea
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          rows={2}
           className={cn(
-            'border-none outline-none h-10 w-full relative z-10 bg-transparent',
+            'resize-none max-h-42 border-none outline-none w-full relative z-10 bg-transparent field-sizing-content',
             selectedFile || isProcessingPdf ? 'pl-0 cursor-not-allowed' : 'pl-2'
           )}
           placeholder={
@@ -201,8 +202,10 @@ export function TechMatchInput({
 
       <div
         className={cn(
-          'bg-linear-to-r from-primary to-lime-200 h-full w-full absolute -bottom-26 blur-xl rounded-full left-1/2 -translate-x-1/2 -z-10 transition-all duration-500 ease-in-out opacity-80',
-          isLoading ? 'animate-pulse -translate-y-3' : 'translate-y-10'
+          'bg-linear-to-r from-primary to-lime-200 h-full w-full absolute -bottom-26 blur-xl rounded-full left-1/2 -translate-x-1/2 -z-10 transition-all duration-500 ease-in-out',
+          isLoading
+            ? 'animate-pulse -translate-y-3 opacity-80'
+            : 'translate-y-10 opacity-0'
         )}
       />
     </form>

@@ -17,8 +17,8 @@ export const InfoCard = ({ title, description, color }: InfoCardProp) => {
         'p-4 rounded-2xl border border-slate-700 text-center bg-bg'
       )}
     >
-      <h3 className={cn('text-xl font-semibold mb-2', color)}>{title}</h3>
-      <p className='text-gray-400'>{description}</p>
+      <h3 className={cn('text-base font-semibold mb-2', color)}>{title}</h3>
+      <p className='text-gray-400 text-base'>{description}</p>
     </motion.div>
   );
 };
