@@ -1,6 +1,6 @@
 'use client';
 
-import { profileSchema } from '@/app/api/search/schema';
+import { profileSchema } from '@/app/api/search-profiles/schema';
 import { z } from 'zod';
 import { useState } from 'react';
 import {
@@ -25,11 +25,10 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={springTransition()}
-      className='min-h-[180px] bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30'
+      className='min-h-[185px] bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30'
     >
       <div className='flex gap-4 items-start'>
         {/* Profile Picture */}
@@ -56,10 +55,10 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
         </div>
 
         {/* Profile Content */}
-        <div className='flex-1 min-w-0'>
+        <div className='w-full'>
           {/* Header - Always Visible */}
           <div className='flex items-start justify-between gap-4'>
-            <div className='flex-1 min-w-0'>
+            <div>
               <h3 className='text-xl font-bold text-white truncate'>
                 {profile?.fullName}
               </h3>
@@ -99,7 +98,7 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
 
           {/* Collapsible Details */}
           <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-            <CollapsibleContent className='space-y-3 mt-3'>
+            <CollapsibleContent className='space-y-4 mt-4 overflow-hidden transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down'>
               {/* Summary */}
               <div className='pt-3 border-t border-gray-700/50'>
                 <h4 className='text-xs font-semibold text-gray-400 mb-1.5'>
@@ -146,15 +145,15 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
               </div>
             </CollapsibleContent>
 
-            <div className='flex items-center justify-between mt-3 pt-3 border-t border-gray-700/50'>
+            <div className='flex items-center mt-4 pt-4 justify-between border-t border-gray-700/50'>
               <a
                 href={`mailto:${profile?.email}`}
-                className='flex items-center gap-1.5 text-pink hover:text-pink/80 transition-colors text-sm font-medium'
+                className='flex items-center gap-1.5 text-pink hover:text-pink/80 transition-colors'
               >
-                <Mail className='w-4 h-4' />
-                Contactar
+                <Mail className='size-4' />
+                <span className='font-medium text-sm leading-0'>Contactar</span>
               </a>
-              <CollapsibleTrigger className='flex items-center gap-1 text-xs text-gray-400 hover:text-main-light-blue transition-colors'>
+              <CollapsibleTrigger className='cursor-pointer flex items-center gap-1 text-xs text-gray-400 hover:text-main-light-blue transition-colors'>
                 {isOpen ? 'Ver menos' : 'Ver más'}
                 <ChevronDown
                   className={`w-4 h-4 transition-transform ${
