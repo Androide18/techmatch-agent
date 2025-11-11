@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
-import Airtable from "airtable";
-import { google } from "@ai-sdk/google";
-import { embedMany } from "ai";
-import { sql } from "@/lib/db";
+// @ts-strict-ignore
+import { NextResponse } from 'next/server';
+import Airtable from 'airtable';
+import { google } from '@ai-sdk/google';
+import { embedMany } from 'ai';
+import { sql } from '@/lib/db';
 
-const EMBEDDING_MODEL = "text-embedding-004";
-const COLLECTION_NAME = "employee_profiles_techmatch";
+const EMBEDDING_MODEL = 'text-embedding-004';
+const COLLECTION_NAME = 'employee_profiles_techmatch';
 const BATCH_SIZE = 10; // Process 10 records at a time (Gemini has higher limits)
 const DELAY_BETWEEN_BATCHES = 500; // 500ms delay between batches
 
@@ -21,13 +22,13 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const checkEnvVars = () => {
   const missingVars = [
-    !AIRTABLE_API_KEY && "AIRTABLE_API_KEY",
-    !AIRTABLE_BASE_ID && "AIRTABLE_BASE_ID",
-    !AIRTABLE_TABLE_ID && "AIRTABLE_TABLE_ID",
-    !GOOGLE_GENERATIVE_AI_API_KEY && "GOOGLE_GENERATIVE_AI_API_KEY",
+    !AIRTABLE_API_KEY && 'AIRTABLE_API_KEY',
+    !AIRTABLE_BASE_ID && 'AIRTABLE_BASE_ID',
+    !AIRTABLE_TABLE_ID && 'AIRTABLE_TABLE_ID',
+    !GOOGLE_GENERATIVE_AI_API_KEY && 'GOOGLE_GENERATIVE_AI_API_KEY',
   ]
     .filter(Boolean)
-    .join(", ");
+    .join(', ');
 
   return {
     missingEnvVars: missingVars,
@@ -51,14 +52,14 @@ export async function GET() {
     );
 
     const logs: string[] = [];
-    logs.push("Starting database seeding process...");
+    logs.push('Starting database seeding process...');
 
     // Setup PostgreSQL
-    logs.push("Setting up PostgreSQL process...");
+    logs.push('Setting up PostgreSQL process...');
 
     // Enable the pgvector extension
     await sql`CREATE EXTENSION IF NOT EXISTS vector`;
-    logs.push("✓ Enabled pgvector extension.");
+    logs.push('✓ Enabled pgvector extension.');
 
     // Create the table to store the data and embeddings
     const tableResult = await sql`
@@ -86,7 +87,7 @@ export async function GET() {
     logs.push("✓ Ensured 'token_usage' table exists.");
 
     // Check if table already existed or was created
-    if (tableResult.command === "CREATE") {
+    if (tableResult.command === 'CREATE') {
       logs.push(`✓ Created table ${COLLECTION_NAME} with 768 dimensions.`);
     } else {
       logs.push(
@@ -95,14 +96,14 @@ export async function GET() {
     }
 
     // Fetch records from Airtable
-    logs.push("Fetching records from Airtable...");
+    logs.push('Fetching records from Airtable...');
     const records = await airtable(AIRTABLE_TABLE_ID!).select().all();
     logs.push(`Fetched ${records.length} records.`);
 
     // Filter active records first
     const activeRecords = records.filter(
       (record) =>
-        record.fields["Full Name"] && record.fields["Status"] === "Active"
+        record.fields['Full Name'] && record.fields['Status'] === 'Active'
     );
     const skippedCount = records.length - activeRecords.length;
     logs.push(
@@ -126,54 +127,55 @@ export async function GET() {
 
       // Prepare batch data (content, metadata, record IDs)
       const batchData = batch.map((record) => {
-        const fields = record.fields;
+        const fields = record.fields as Record<string, string[]>;
 
         const content = `
-    Professional Profile: ${fields["Full Name"] || "N/A"}, ${
-          fields["Position"] || fields["Job"] || "N/A"
-        }, Seniority: ${fields["Seniority"] || "N/A"}
+    Professional Profile: ${fields['Full Name'] || 'N/A'}, ${
+          fields['Position'] || fields['Job'] || 'N/A'
+        }, Seniority: ${fields['Seniority'] || 'N/A'}
 
     Summary:
-    ${fields["About you"] || "No personal summary provided."}
+    ${fields['About you'] || 'No personal summary provided.'}
 
     Core Role:
-    - Job Title: ${fields["Position"] || fields["Job"] || "N/A"}
-    - Department: ${fields["Area"] || "N/A"}
-    - Seniority Level: ${fields["Seniority"] || "N/A"}
-    - Contract Type: ${fields["Type of Contract"]?.join(", ") || "N/A"}
+    - Job Title: ${fields['Position'] || fields['Job'] || 'N/A'}
+    - Department: ${fields['Area'] || 'N/A'}
+    - Seniority Level: ${fields['Seniority'] || 'N/A'}
+    - Contract Type: ${fields['Type of Contract']?.join(', ') || 'N/A'}
 
     Technical Skills:
     - Primary Skills: ${
-      fields["Skills"]?.join(", ") || "No technical skills listed."
+      fields['Skills']?.join(', ') || 'No technical skills listed.'
     }
 
     Education:
-    - University: ${fields["University"] || "N/A"}
-    - Degree: ${fields["Career"] || "N/A"}
-    - Status: ${fields["Career status"] || "N/A"}
+    - University: ${fields['University'] || 'N/A'}
+    - Degree: ${fields['Career'] || 'N/A'}
+    - Status: ${fields['Career status'] || 'N/A'}
         `
           .trim()
-          .replace(/\n\s+/g, "\n");
+          .replace(/\n\s+/g, '\n');
 
         const metadata = {
           record_id: record.id,
-          full_name: fields["Full Name"] || null,
-          email: fields["Email"] || null,
-          status: fields["Status"] || null,
-          area: fields["Area"] || null,
-          job_title: fields["Position"] || fields["Job"] || null,
-          seniority: fields["Seniority"] || null,
-          location: fields["Location"] || null,
-          office: fields["Office"] || null,
+          full_name: fields['Full Name'] || null,
+          email: fields['Email'] || null,
+          status: fields['Status'] || null,
+          area: fields['Area'] || null,
+          job_title: fields['Position'] || fields['Job'] || null,
+          seniority: fields['Seniority'] || null,
+          location: fields['Location'] || null,
+          office: fields['Office'] || null,
           profile_picture_url:
-            fields["Profile Picture"]?.[0]?.thumbnails?.large?.url || null,
+            // @ts-expect-error thumbnails exist
+            fields['Profile Picture']?.[0]?.thumbnails?.large?.url || null,
         };
 
         return {
           recordId: record.id,
           content,
           metadata,
-          fullName: fields["Full Name"],
+          fullName: fields['Full Name'],
         };
       });
 
@@ -229,11 +231,11 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    console.error("❌ An error occurred during seeding:", error);
+    console.error('❌ An error occurred during seeding:', error);
     return NextResponse.json(
       {
-        error: "Failed to seed database",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Failed to seed database',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
