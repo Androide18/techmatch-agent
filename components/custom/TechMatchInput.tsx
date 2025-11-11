@@ -72,7 +72,7 @@ export function TechMatchInput({
         e.stopPropagation();
       }}
     >
-      <div className='p-3 bg-slate-700/20 backdrop-blur-lg rounded-2xl flex flex-col gap-3 border border-slate-600 overflow-hidden relative'>
+      <div className='p-3 bg-slate-700/20 backdrop-blur-lg rounded-2xl flex flex-col gap-3 border border-slate-700 overflow-hidden relative'>
         <input
           type='file'
           ref={fileInputRef}
