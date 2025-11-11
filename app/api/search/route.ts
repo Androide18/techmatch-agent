@@ -3,6 +3,7 @@ import { generateEmbedding } from "./embedding";
 import { buildMatchingProfilesContext, fetchMatchingProfiles } from "./utils";
 import { streamObject } from "ai";
 import { profileSchema } from "./schema";
+import { sql } from "@/lib/db";
 
 const CHAT_MODEL = "gemini-2.5-flash-lite";
 
@@ -22,7 +23,14 @@ export async function POST(req: Request) {
       embedding: queryEmbedding,
     });
 
-    const context = buildMatchingProfilesContext(matchingProfiles);
+    // Limit to top 3 most relevant profiles (for testing purposes)
+    // ------------------------------------------------------------- //
+    const topMatches = matchingProfiles.slice(0, 3);
+    // Build context only with the top 3 matches
+    const context = buildMatchingProfilesContext(topMatches);
+    // ------------------------------------------------------------- //
+
+    //  const context = buildMatchingProfilesContext(matchingProfiles);
 
     // Use generateObject to structure the data
     const result = await streamObject({
@@ -46,6 +54,24 @@ export async function POST(req: Request) {
         - Mantén los datos exactos sin inventar información
         - Si no hay perfiles que coincidan, devuelve un array vacío
       `,
+      onFinish: async (response) => {
+        const { inputTokens, outputTokens, reasoningTokens, totalTokens } =
+          response.usage;
+
+        // Replace undefined values with 0 (or another default value)
+        const safeInputTokens = inputTokens ?? 0;
+        const safeOutputTokens = outputTokens ?? 0;
+        const safeReasoningTokens = reasoningTokens ?? 0;
+        const safeTotalTokens = totalTokens ?? 0;
+
+        // Save token usage in the database
+        await sql`
+          INSERT INTO token_usage (input_tokens, output_tokens, reasoning_tokens, total_tokens, source)
+          VALUES (${safeInputTokens}, ${safeOutputTokens}, ${safeReasoningTokens}, ${safeTotalTokens}, 'matching-profiles-api')
+        `;
+
+        console.log("Token usage successfully saved in the database.");
+      },
     });
 
     return result.toTextStreamResponse();

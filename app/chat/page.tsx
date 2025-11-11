@@ -27,12 +27,14 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [tokensUsed, setTokensUsed] = useState(null);
+  const [tokenSearchUsed, setTokenSearchUsed] = useState(null);
 
   const { isLoading, object, clear, submit, stop } = useObject({
     api: "/api/search",
     schema: z.array(profileSchema),
     onFinish: () => {
       setRequestFinished(true);
+      fetchLatestTokenUsage();
     },
   });
 
@@ -77,7 +79,6 @@ export default function Home() {
         }
 
         const { text, tokens } = await pdfResponse.json();
-        console.log("RES TOKENS:", tokens);
         console.log("Extracted PDF text:", text.slice(0, 200));
 
         setTokensUsed(tokens);
@@ -88,6 +89,20 @@ export default function Home() {
       } finally {
         setPdfLoading(false); //
       }
+    }
+  };
+
+  const fetchLatestTokenUsage = async () => {
+    try {
+      const response = await fetch("/api/token-usage");
+      if (response.ok) {
+        const data = await response.json();
+        setTokenSearchUsed(data.tokenUsage);
+      } else {
+        console.error("Failed to fetch latest token usage.");
+      }
+    } catch (error) {
+      console.error("Error fetching token usage:", error);
     }
   };
 
@@ -163,7 +178,12 @@ export default function Home() {
           >
             {object?.map((item, index) => (
               // @ts-expect-error profile is good
-              <ProfileCard key={`${ item?.id || item?.fullName?.trim() || "profile"}-${index}`} profile={item} /> 
+              <ProfileCard
+                key={`${
+                  item?.id || item?.fullName?.trim() || "profile"
+                }-${index}`}
+                profile={item}
+              />
             ))}
 
             {!requestFinished && <ProfileCardSkeleton />}
@@ -274,7 +294,7 @@ export default function Home() {
           )}
         </AnimatePresence>
       </motion.div>
-      <TokenConsole tokensUsed={tokensUsed} />
+      <TokenConsole tokensUsed={tokensUsed} tokenSearchUsed={tokenSearchUsed} />
     </main>
   );
 }

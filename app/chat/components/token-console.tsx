@@ -4,30 +4,47 @@ import { useState } from "react";
 import { motion } from "motion/react";
 
 interface TokenData {
-  validation?: {
-    inputTokens: number;
-    outputTokens: number;
-    reasoningTokens: number;
-    totalTokens: number;
-  };
-  summary?: {
-    inputTokens: number;
-    outputTokens: number;
-    reasoningTokens: number;
-    totalTokens: number;
-  };
+  validation?: TokenUsage;
+  summary?: TokenUsage;
+}
+
+interface TokenUsage {
+  inputTokens: number;
+  outputTokens: number;
+  reasoningTokens: number;
+  totalTokens: number;
 }
 
 interface TokenConsoleProps {
   tokensUsed?: TokenData | null;
+  tokenSearchUsed?: TokenUsage | null;
 }
 
-export function TokenConsole({ tokensUsed }: TokenConsoleProps) {
+export function TokenConsole({
+  tokensUsed,
+  tokenSearchUsed,
+}: TokenConsoleProps) {
   const [open, setOpen] = useState(false);
 
   const totalTokens =
     (tokensUsed?.validation?.totalTokens ?? 0) +
-    (tokensUsed?.summary?.totalTokens ?? 0);
+    (tokensUsed?.summary?.totalTokens ?? 0) +
+    (tokenSearchUsed?.totalTokens ?? 0);
+
+  const totalInputTokens =
+    (tokensUsed?.validation?.inputTokens ?? 0) +
+    (tokensUsed?.summary?.inputTokens ?? 0) +
+    (tokenSearchUsed?.inputTokens ?? 0);
+
+  const totalOutputTokens =
+    (tokensUsed?.validation?.outputTokens ?? 0) +
+    (tokensUsed?.summary?.outputTokens ?? 0) +
+    (tokenSearchUsed?.outputTokens ?? 0);
+
+  const totalReasoningTokens =
+    (tokensUsed?.validation?.reasoningTokens ?? 0) +
+    (tokensUsed?.summary?.reasoningTokens ?? 0) +
+    (tokenSearchUsed?.reasoningTokens ?? 0);
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
@@ -56,15 +73,19 @@ export function TokenConsole({ tokensUsed }: TokenConsoleProps) {
             <h4 className="font-semibold text-white">Token Usage</h4>
           </div>
 
-          {tokensUsed ? (
+          {tokensUsed || tokenSearchUsed ? (
             <>
               <p>
-                <span className="font-medium">Validation:</span>{" "}
-                {tokensUsed.validation?.totalTokens ?? 0} tokens
+                <span className="font-medium">Input:</span>{" "}
+                {totalInputTokens ?? 0} tokens
               </p>
               <p>
-                <span className="font-medium">Summary:</span>{" "}
-                {tokensUsed.summary?.totalTokens ?? 0} tokens
+                <span className="font-medium">Output:</span>{" "}
+                {totalOutputTokens ?? 0} tokens
+              </p>
+              <p>
+                <span className="font-medium">Reasoning:</span>{" "}
+                {totalReasoningTokens ?? 0} tokens
               </p>
               <p className="border-t border-gray-700 pt-2">
                 <span className="font-medium">Total:</span> {totalTokens} tokens
