@@ -1,11 +1,13 @@
 import { generateEmbedding } from '@/app/api/search-profiles/embedding';
-import { AgentStateType, AgentNode } from '../graph';
+import { HRAgentNode, HRAgentStateType } from '../graph';
 
 export const generateInputEmbedding = async (
-  state: AgentStateType
-): Promise<AgentStateType> => {
+  state: HRAgentStateType
+): Promise<HRAgentStateType> => {
   try {
-    const inputEmbedding = await generateEmbedding({ query: state.userInput! });
+    const inputEmbedding = await generateEmbedding({
+      query: state.input!,
+    });
 
     return {
       inputEmbedding,
@@ -16,7 +18,7 @@ export const generateInputEmbedding = async (
         reason: `Failed to generate input embedding: ${
           (error as Error).message
         }`,
-        step: AgentNode.GenerateInputEmbedding,
+        step: HRAgentNode.GenerateInputEmbedding,
       },
     };
   }

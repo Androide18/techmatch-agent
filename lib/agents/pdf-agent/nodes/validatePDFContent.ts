@@ -1,12 +1,12 @@
 import { generateText } from 'ai';
-import { AgentNode, AgentStateType } from '../graph';
 import { getSelectedModel } from '@/lib/llm_model';
+import { PdfAgentNode, PdfAgentStateType } from '../graph';
 
 export const validateContent = async ({
   fileBuffer,
 }: {
   fileBuffer: Buffer;
-}): Promise<AgentStateType> => {
+}): Promise<PdfAgentStateType> => {
   try {
     const { text: validationText } = await generateText({
       model: getSelectedModel(),
@@ -39,19 +39,19 @@ Answer only with "yes" or "no".
         error: {
           reason:
             'The PDF does not contain a valid software development job offer.',
-          step: AgentNode.ValidateContent,
+          step: PdfAgentNode.ValidateContent,
         },
       };
     }
 
     return {
-      fileValidation: { contentValid: true },
+      validation: { contentValid: true },
     };
   } catch (error) {
     return {
       error: {
         reason: `Content validation failed: ${(error as Error).message}`,
-        step: AgentNode.ValidateContent,
+        step: PdfAgentNode.ValidateContent,
       },
     };
   }

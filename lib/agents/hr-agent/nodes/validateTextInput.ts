@@ -1,15 +1,15 @@
 import { generateText } from 'ai';
-import { AgentStateType, AgentNode } from '../graph';
 import { getSelectedModel } from '@/lib/llm_model';
+import { HRAgentStateType, HRAgentNode } from '../graph';
 
 export const validateTextInput = async (
-  state: AgentStateType
-): Promise<AgentStateType> => {
-  if (!state.userInput || typeof state.userInput !== 'string') {
+  state: HRAgentStateType
+): Promise<HRAgentStateType> => {
+  if (!state.input || typeof state.input !== 'string') {
     return {
       error: {
         reason: 'Text input is either missing or not a string.',
-        step: AgentNode.ValidateTextInput,
+        step: HRAgentNode.ValidateTextInput,
       },
     };
   }
@@ -19,22 +19,22 @@ export const validateTextInput = async (
     prompt: `You are validating user text input. The input must be referring to a software developer job description.
 If the input is valid, respond ONLY with "yes". If the input is invalid, respond with a brief reason why is not valid.
 
-User Input: "${state.userInput}"`,
+User Input: "${state.input}"`,
   });
 
   const isValid = text.toLowerCase().includes('yes');
 
   if (!isValid) {
     return {
-      inputValidation: { isValid: false },
+      validation: { isValid: false },
       error: {
-        step: AgentNode.ValidateTextInput,
+        step: HRAgentNode.ValidateTextInput,
         reason: text.trim(),
       },
     };
   }
 
   return {
-    inputValidation: { isValid: true },
+    validation: { isValid: true },
   };
 };

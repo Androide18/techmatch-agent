@@ -23,8 +23,15 @@ import { Loader2 } from 'lucide-react';
 
 export default function Home() {
   const [requestFinished, setRequestFinished] = useState(false);
+  const [isProcessingPdf, setIsProcessingPdf] = useState(false);
 
-  const { isLoading, object, clear, submit, stop } = useObject({
+  const {
+    isLoading: searchingProfiles,
+    object,
+    clear,
+    submit,
+    stop,
+  } = useObject({
     api: '/api/search-profiles',
     schema: z.array(profileSchema),
     onFinish: () => {
@@ -33,14 +40,15 @@ export default function Home() {
   });
 
   const hasItems = object && object.length > 0;
+  const isLoading = searchingProfiles || isProcessingPdf;
 
   const handleNewSearch = () => {
     setRequestFinished(false);
     clear();
   };
 
-  const handleSubmit = (userInput: string | FormData) => {
-    submit({ userInput });
+  const handleSubmit = (input: string) => {
+    submit({ input });
   };
 
   return (
@@ -109,7 +117,7 @@ export default function Home() {
             animate='visible'
             exit='hidden'
             layout
-            className='w-full max-w-5xl flex flex-col gap-10'
+            className='w-full max-w-5xl flex flex-col gap-6'
           >
             {object?.map((item, index) => (
               <ProfileCard
@@ -120,6 +128,15 @@ export default function Home() {
 
             {!requestFinished && <ProfileCardSkeleton />}
           </motion.div>
+        )}
+
+        {requestFinished && !hasItems && (
+          <div className='w-full items-center justify-center flex flex-col gap-4 flex-1'>
+            <p>No se encontraron perfiles para tu busqueda</p>
+            <Button disabled={isLoading} onClick={handleNewSearch}>
+              Realizar nueva búsqueda
+            </Button>
+          </div>
         )}
 
         {!requestFinished && (
@@ -148,6 +165,8 @@ export default function Home() {
                 >
                   <TechMatchInput
                     onSubmit={handleSubmit}
+                    isProcessingPdf={isProcessingPdf}
+                    setIsProcessingPdf={setIsProcessingPdf}
                     isLoading={isLoading}
                     onStop={stop}
                   />

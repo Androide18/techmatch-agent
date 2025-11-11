@@ -1,7 +1,8 @@
 {
   "node_version": "22",
   "graphs": {
-    "agent": "./lib/agent/graph.ts:agent"
+    "agent": "./lib/agents/hr-agent/graph.ts:hrAgent",
+    "pdf-agent": "./lib/agents/pdf-agent/graph.ts:pdfAgent"
   },
   "env": ".env",
   "dependencies": ["."],

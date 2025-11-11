@@ -1,7 +1,7 @@
-import { AgentStateType } from '../graph';
 import { Profile } from '@/app/api/search-profiles/types';
+import { HRAgentStateType } from '../graph';
 
-export const buildContext = (state: AgentStateType): AgentStateType => {
+export const buildContext = (state: HRAgentStateType): HRAgentStateType => {
   const profilesContext =
     state.matchingProfiles?.map(buildProfileContext).join('\n') || '';
 

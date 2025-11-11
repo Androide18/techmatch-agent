@@ -1,10 +1,10 @@
-import { AgentNode, AgentStateType } from '../graph';
+import { HRAgentNode, HRAgentStateType } from '../../hr-agent/graph';
 
 export const convertFileToBuffer = async ({
   file,
 }: {
   file: File;
-}): Promise<AgentStateType> => {
+}): Promise<HRAgentStateType> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);
@@ -14,7 +14,7 @@ export const convertFileToBuffer = async ({
     return {
       error: {
         reason: `Failed to convert file to buffer: ${(error as Error).message}`,
-        step: AgentNode.ConvertFileToBuffer,
+        step: HRAgentNode.ConvertFileToBuffer,
       },
     };
   }

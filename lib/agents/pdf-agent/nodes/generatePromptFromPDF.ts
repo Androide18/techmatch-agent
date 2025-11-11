@@ -1,12 +1,12 @@
 import { generateText } from 'ai';
-import { AgentNode, AgentStateType } from '../graph';
 import { getSelectedModel } from '@/lib/llm_model';
+import { PdfAgentNode, PdfAgentStateType } from '../graph';
 
 export const generatePromptFromPDF = async ({
   fileBuffer,
 }: {
   fileBuffer: Buffer;
-}): Promise<AgentStateType> => {
+}): Promise<PdfAgentStateType> => {
   try {
     const { text: generatedPrompt } = await generateText({
       model: getSelectedModel(),
@@ -28,16 +28,16 @@ export const generatePromptFromPDF = async ({
       ],
     });
 
-    const userInput = generatedPrompt.trim();
+    const input = generatedPrompt.trim();
 
-    return { userInput: userInput };
+    return { generatedPrompt: input };
   } catch (error) {
     return {
       error: {
         reason: `Failed to generate prompt from PDF: ${
           (error as Error).message
         }`,
-        step: AgentNode.GenerateUserPromptFromPDF,
+        step: PdfAgentNode.GenerateUserPromptFromPDF,
       },
     };
   }

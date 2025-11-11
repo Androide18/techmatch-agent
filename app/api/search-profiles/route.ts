@@ -1,14 +1,13 @@
-import { agent } from '@/lib/agent/graph';
+import { hrAgent } from '@/lib/agents/hr-agent/graph';
 import { streamObject } from 'ai';
 import { getSelectedModel } from '@/lib/llm_model';
 import { profileSchema } from './schema';
 
 export async function POST(req: Request) {
   try {
-    const { userInput } = await req.json();
+    const { input } = await req.json();
 
-    // Run LangGraph agent to completion (validation, embedding, retrieval, context building)
-    const agentResult = await agent.invoke({ userInput });
+    const agentResult = await hrAgent.invoke({ input });
 
     if (agentResult.error) {
       return Response.json(
@@ -25,16 +24,17 @@ export async function POST(req: Request) {
       temperature: 0,
       prompt: `Estructura la información de los siguientes perfiles de desarrolladores en formato JSON.
 
-Requerimiento del usuario: "${agentResult.userInput}"
-
 Perfiles encontrados:
 ${agentResult.context}
 
-IMPORTANTE:
-- Devuelve SOLO los perfiles que sean relevantes para el requerimiento
-- Ordena los perfiles por relevancia (más relevante primero)
-- El campo "similarityScore" debe reflejar el porcentaje de coincidencia con el requerimiento
-- El campo "summary" debe explicar POR QUÉ este perfil encaja con el requerimiento específico del usuario`,
+Reglas para estructurar la información:
+- Solo puedes usar los perfiles que se encuentran en la lista anterior.
+- No puede inventar información de los perfiles si no está en la lista.
+- Describe cada perfil de manera concisa y clara, utilizando las habilidades y experiencia que se detallan en la lista anterior.
+- Devuelve un array de objetos JSON.
+- Cada objeto representa un perfil de desarrollador.
+- Si no hay perfiles, devuelve un array vacío: [].
+`,
     });
 
     // Return the stream in the format expected by useObject

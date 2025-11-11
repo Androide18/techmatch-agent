@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { ArrowUp, FilePlus, FilePlus2, Square } from 'lucide-react';
+import { ArrowUp, FilePlus, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -11,21 +11,24 @@ import {
 
 interface TechMatchInputProps {
   onStop: () => void;
-  onSubmit: (query: string | FormData) => void | Promise<void>;
+  onSubmit: (query: string) => void | Promise<void>;
   isLoading: boolean;
+  isProcessingPdf: boolean;
+  setIsProcessingPdf: (t: boolean) => void;
 }
 
 export function TechMatchInput({
   onSubmit,
   onStop,
   isLoading,
+  isProcessingPdf,
+  setIsProcessingPdf,
 }: TechMatchInputProps) {
   const [query, setQuery] = useState('');
   const [tooltipEnabled, setTooltipEnabled] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const isInputEmpty = query.length === 0 && !selectedFile;
 
   const handleTooltipEnabled = (open: boolean) => {
@@ -52,14 +55,42 @@ export function TechMatchInput({
       onSubmit={async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (isLoading) return;
+        if (isProcessingPdf) return;
 
-        // Handle PDF upload
+        // Handle PDF upload - two-step process
         if (selectedFile) {
-          const formData = new FormData();
-          formData.append('file', selectedFile);
+          setIsProcessingPdf(true);
 
-          await onSubmit(formData);
+          try {
+            // Step 1: Send PDF to processing endpoint
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            const response = await fetch('/api/process-pdf', {
+              method: 'POST',
+              body: formData,
+            });
+
+            if (!response.ok) {
+              const error = await response.json();
+              console.error('PDF processing failed:', error);
+              setIsProcessingPdf(false);
+              return;
+            }
+
+            const { prompt } = await response.json();
+
+            // Step 2: Submit the extracted prompt
+            await onSubmit(prompt);
+
+            // Clear state after successful submission
+            setSelectedFile(null);
+          } catch (error) {
+            console.error('Error processing PDF:', error);
+          } finally {
+            setIsProcessingPdf(false);
+          }
+
           return;
         }
 
@@ -83,12 +114,14 @@ export function TechMatchInput({
           onChange={(e) => setQuery(e.target.value)}
           className={cn(
             'border-none outline-none h-10 w-full relative z-10 bg-transparent',
-            selectedFile ? 'pl-0 cursor-not-allowed' : 'pl-2'
+            selectedFile || isProcessingPdf ? 'pl-0 cursor-not-allowed' : 'pl-2'
           )}
           placeholder={
-            selectedFile ? '' : 'Escribe los requerimientos del puesto'
+            selectedFile || isProcessingPdf
+              ? ''
+              : 'Escribe los requerimientos del puesto'
           }
-          disabled={!!selectedFile} // disable typing if file is selected
+          disabled={!!selectedFile || isProcessingPdf} // disable typing if file is selected or processing
         />
 
         {/* File card overlay */}
@@ -127,15 +160,18 @@ export function TechMatchInput({
           delayDuration={400}
         >
           <TooltipTrigger asChild>
-            {isLoading ? (
+            {isLoading || isProcessingPdf ? (
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  onStop();
+                  if (!isProcessingPdf) {
+                    onStop();
+                  }
                 }}
                 type='button'
                 className='border cursor-pointer rounded-full p-2 transition-duration-300 border-gray-600 hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-gray-400 transition-all'
+                disabled={isProcessingPdf}
               >
                 <Square size={20} className='text-slate-200' />
               </button>
@@ -146,7 +182,7 @@ export function TechMatchInput({
                   'border cursor-pointer border-gray-600 rounded-full p-2 transition-all duration-300',
                   isInputEmpty &&
                     'opacity-60 cursor-not-allowed hover:animate-shake',
-                  !isLoading &&
+                  !isProcessingPdf &&
                     !isInputEmpty &&
                     'hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-gray-400'
                 )}
@@ -156,7 +192,9 @@ export function TechMatchInput({
             )}
           </TooltipTrigger>
           <TooltipContent>
-            Ingresa requerimientos para enviar el mensaje
+            {isProcessingPdf
+              ? 'Procesando PDF...'
+              : 'Ingresa requerimientos para enviar el mensaje'}
           </TooltipContent>
         </Tooltip>
       </div>

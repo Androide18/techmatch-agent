@@ -3,7 +3,7 @@ export const information = [
     id: 'smart-assignation',
     title: 'Asignación Inteligente',
     description:
-      'Encuentra automáticamente el mejor candidato para cada proyecto según skills, experiencia y carga actual.',
+      'Encuentra automáticamente el mejor candidato para cada proyecto según skills y experiencia.',
     color: 'text-secondary-1',
   },
   {
