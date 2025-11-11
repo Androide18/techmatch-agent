@@ -1,5 +1,5 @@
 import { generateText } from 'ai';
-import { getSelectedModel } from '@/lib/llm_model';
+import { getSelectedModelServer } from '@/lib/llm_model';
 import { HRAgentStateType, HRAgentNode } from '../graph';
 
 export const validateTextInput = async (
@@ -14,8 +14,10 @@ export const validateTextInput = async (
     };
   }
 
+  const model = await getSelectedModelServer();
+
   const { text } = await generateText({
-    model: getSelectedModel(),
+    model,
     prompt: `You are validating user text input. The input must be referring to a software developer job description.
 If the input is valid, respond ONLY with "yes". If the input is invalid, respond with a brief reason why is not valid.
 

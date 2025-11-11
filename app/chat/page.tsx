@@ -2,7 +2,7 @@
 
 import z from 'zod';
 import { profileSchema } from '../api/search-profiles/schema';
-import { TechMatchInput } from '../features/TechMatchInput';
+import { TechMatchInput } from '../../components/custom/TechMatchInput';
 import { experimental_useObject as useObject } from '@ai-sdk/react';
 import { useState } from 'react';
 import { ProfileCard } from './components/profile-card';
@@ -47,14 +47,53 @@ export default function Home() {
     clear();
   };
 
-  const handleSubmit = (input: string) => {
+  const handleSubmit = async ({
+    input,
+    file,
+  }: {
+    input?: string;
+    file?: File;
+  }) => {
+    if (file) {
+      setIsProcessingPdf(true);
+      try {
+        // Step 1: Send PDF to processing endpoint
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('/api/process-pdf', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('PDF processing failed:', error);
+          setIsProcessingPdf(false);
+          return;
+        }
+
+        const { prompt } = await response.json();
+
+        // Step 2: Submit the extracted prompt
+        await submit({ input: prompt });
+      } catch (error) {
+        console.error('Error processing PDF:', error);
+      } finally {
+        setIsProcessingPdf(false);
+      }
+
+      return;
+    }
+
+    if (!input?.trim()) return;
     submit({ input });
   };
 
   return (
     <main className='py-6 px-4 gap-0 max-w-7xl mx-auto flex flex-col h-dvh relative'>
       {/* Hero Section */}
-      <nav className='flex justify-between items-center w-full'>
+      <nav className='flex justify-between items-center w-full sticky top-0 z-20 bg-bg/60 backdrop-blur-lg p-4'>
         <div>
           <h1 className='md:text-3xl text-2xl font-extrabold sirius-gradient inline-block bg-clip-text text-transparent font-inter tracking-tight'>
             TechMatch Bot
@@ -78,11 +117,7 @@ export default function Home() {
         )}
       </nav>
 
-      <motion.section
-        layout
-        style={{ justifyContent: requestFinished ? 'flex-start' : 'center' }}
-        className='flex-1 z-10 justify-center items-center gap-32 flex flex-col relative'
-      >
+      <motion.section className='flex-1 z-10 justify-center items-center gap-32 flex flex-col relative'>
         <AnimatePresence>
           {!requestFinished && !isLoading && (
             <div className='h-full justify-center max-w-4xl text-center flex flex-col gap-2'>
@@ -116,7 +151,6 @@ export default function Home() {
             initial='hidden'
             animate='visible'
             exit='hidden'
-            layout
             className='w-full max-w-5xl flex flex-col gap-6 my-10'
           >
             {object?.map((item, index) => (
@@ -166,7 +200,6 @@ export default function Home() {
                   <TechMatchInput
                     onSubmit={handleSubmit}
                     isProcessingPdf={isProcessingPdf}
-                    setIsProcessingPdf={setIsProcessingPdf}
                     isLoading={isLoading}
                     onStop={stop}
                   />
@@ -204,7 +237,7 @@ export default function Home() {
         animate={{ opacity: 1.0 }}
         transition={{ delay: 0.95, duration: 1, ease: 'easeOut' }}
         className={cn(
-          'absolute top-60 -translate-x-1/2 left-1/2 flex flex-col items-center w-full'
+          'fixed top-60 -translate-x-1/2 left-1/2 flex flex-col items-center w-full'
         )}
       >
         <motion.div

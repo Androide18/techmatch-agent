@@ -1,6 +1,6 @@
 import { hrAgent } from '@/lib/agents/hr-agent/graph';
 import { streamObject } from 'ai';
-import { getSelectedModel } from '@/lib/llm_model';
+import { getSelectedModelServer } from '@/lib/llm_model';
 import { profileSchema } from './schema';
 
 export async function POST(req: Request) {
@@ -16,9 +16,11 @@ export async function POST(req: Request) {
       );
     }
 
+    const model = await getSelectedModelServer();
+
     // Now stream the response directly using AI SDK
     const stream = streamObject({
-      model: getSelectedModel(),
+      model,
       output: 'array',
       schema: profileSchema,
       temperature: 0,

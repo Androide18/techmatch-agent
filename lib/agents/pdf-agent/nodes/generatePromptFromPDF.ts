@@ -1,5 +1,5 @@
 import { generateText } from 'ai';
-import { getSelectedModel } from '@/lib/llm_model';
+import { getSelectedModelServer } from '@/lib/llm_model';
 import { PdfAgentNode, PdfAgentStateType } from '../graph';
 
 export const generatePromptFromPDF = async ({
@@ -8,8 +8,9 @@ export const generatePromptFromPDF = async ({
   fileBuffer: Buffer;
 }): Promise<PdfAgentStateType> => {
   try {
+    const model = await getSelectedModelServer();
     const { text: generatedPrompt } = await generateText({
-      model: getSelectedModel(),
+      model,
       messages: [
         {
           role: 'user',

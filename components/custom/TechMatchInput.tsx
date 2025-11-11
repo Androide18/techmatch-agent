@@ -9,13 +9,19 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
+import { ModelSelector } from './model-selector';
 
 interface TechMatchInputProps {
   onStop: () => void;
-  onSubmit: (query: string) => void | Promise<void>;
+  onSubmit: ({
+    input,
+    file,
+  }: {
+    input?: string;
+    file?: File;
+  }) => void | Promise<void>;
   isLoading: boolean;
   isProcessingPdf: boolean;
-  setIsProcessingPdf: (t: boolean) => void;
 }
 
 export function TechMatchInput({
@@ -23,7 +29,6 @@ export function TechMatchInput({
   onStop,
   isLoading,
   isProcessingPdf,
-  setIsProcessingPdf,
 }: TechMatchInputProps) {
   const [query, setQuery] = useState('');
   const [tooltipEnabled, setTooltipEnabled] = useState(false);
@@ -55,48 +60,7 @@ export function TechMatchInput({
     if (isProcessingPdf) return;
 
     if ((e.key === 'Enter' && e.metaKey) || e.ctrlKey) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (selectedFile) {
-        // Handle PDF upload - two-step process
-        setIsProcessingPdf(true);
-
-        try {
-          // Step 1: Send PDF to processing endpoint
-          const formData = new FormData();
-          formData.append('file', selectedFile);
-
-          const response = await fetch('/api/process-pdf', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (!response.ok) {
-            const error = await response.json();
-            console.error('PDF processing failed:', error);
-            setIsProcessingPdf(false);
-            return;
-          }
-
-          const { prompt } = await response.json();
-
-          // Step 2: Submit the extracted prompt
-          await onSubmit(prompt);
-
-          // Clear state after successful submission
-          setSelectedFile(null);
-        } catch (error) {
-          console.error('Error processing PDF:', error);
-        } finally {
-          setIsProcessingPdf(false);
-        }
-
-        return;
-      }
-
-      // Handle text query
-      if (!query.trim()) return;
-      onSubmit(query);
+      onSubmit({ input: query, file: selectedFile || undefined });
     }
   };
 
@@ -108,7 +72,7 @@ export function TechMatchInput({
         e.stopPropagation();
       }}
     >
-      <div className='p-3 bg-slate-700/20 backdrop-blur-lg rounded-2xl flex flex-col gap-3 border border-gray-700 overflow-hidden relative'>
+      <div className='p-3 bg-slate-700/20 backdrop-blur-lg rounded-2xl flex flex-col gap-3 border border-slate-600 overflow-hidden relative'>
         <input
           type='file'
           ref={fileInputRef}
@@ -139,13 +103,13 @@ export function TechMatchInput({
 
           {/* File card overlay */}
           {selectedFile && (
-            <div className='absolute left-0 top-1/2 -translate-y-1/2 flex items-center bg-gray-700/80 text-gray-200 px-3 py-1 rounded-full gap-2 shadow-md z-20 pointer-events-auto'>
+            <div className='absolute left-0 top-1/2 -translate-y-1/2 flex items-center bg-slate-600/80 text-slate-300 px-3 py-1 rounded-full gap-2 shadow-md z-20 pointer-events-auto'>
               <span className='text-sm font-medium truncate max-w-xs'>
                 {selectedFile.name}
               </span>
               <button
                 type='button'
-                className='text-gray-300 hover:text-red-400 font-bold cursor-pointer'
+                className='text-slate-400 hover:text-red-400 font-bold cursor-pointer'
                 onClick={() => setSelectedFile(null)}
               >
                 ×
@@ -155,20 +119,22 @@ export function TechMatchInput({
         </div>
 
         <div className='flex justify-between items-center'>
-          <Tooltip>
-            <TooltipTrigger asChild onClick={handleFileClick}>
-              <div
-                className={cn(
-                  'border cursor-pointer border-gray-600 rounded-full p-2 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_3px_0] hover:shadow-gray-400'
-                )}
-              >
-                <FilePlus size={20} className='text-slate-200' />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>Subir PDF</TooltipContent>
-          </Tooltip>
+          <div className='flex items-center gap-4'>
+            <Tooltip>
+              <TooltipTrigger asChild onClick={handleFileClick}>
+                <div
+                  className={cn(
+                    'border cursor-pointer border-slate-600 rounded-full p-2 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_3px_0] hover:shadow-slate-400'
+                  )}
+                >
+                  <FilePlus size={20} className='text-slate-300' />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>Subir PDF</TooltipContent>
+            </Tooltip>
 
-          {/* <ModelSelector /> */}
+            <ModelSelector />
+          </div>
 
           <Tooltip
             open={tooltipEnabled}
@@ -186,22 +152,24 @@ export function TechMatchInput({
                     }
                   }}
                   type='button'
-                  className='border cursor-pointer rounded-full p-2 transition-duration-300 border-gray-600 hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-gray-400 transition-all'
+                  className='border cursor-pointer rounded-full p-2 transition-duration-300 border-slate-600 hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-slate-400 transition-all'
                   disabled={isProcessingPdf}
                 >
-                  <Square size={20} className='text-slate-200' />
+                  <Square size={20} className='text-slate-300' />
                 </button>
               ) : (
                 <button
                   type='button'
-                  onClick={() => onSubmit(query)}
+                  onClick={() =>
+                    onSubmit({ input: query, file: selectedFile || undefined })
+                  }
                   className={cn(
-                    'border cursor-pointer border-gray-600 rounded-full p-2 transition-all duration-300',
+                    'border cursor-pointer border-slate-600 rounded-full p-2 transition-all duration-300',
                     isInputEmpty &&
                       'opacity-60 cursor-not-allowed hover:animate-shake',
                     !isProcessingPdf &&
                       !isInputEmpty &&
-                      'hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-gray-400'
+                      'hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-slate-400'
                   )}
                 >
                   <ArrowUp size={20} className='text-slate-200' />

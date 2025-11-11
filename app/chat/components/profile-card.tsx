@@ -28,7 +28,7 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={springTransition()}
-      className='min-h-[180px] bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30'
+      className='min-h-[185px] bg-linear-to-br from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-lg p-4 backdrop-blur-sm hover:border-main-light-blue/30'
     >
       <div className='flex gap-4 items-start'>
         {/* Profile Picture */}
@@ -55,10 +55,10 @@ export const ProfileCard = ({ profile }: ProfileCardProps) => {
         </div>
 
         {/* Profile Content */}
-        <div className='flex-1 min-w-0'>
+        <div className='w-full'>
           {/* Header - Always Visible */}
           <div className='flex items-start justify-between gap-4'>
-            <div className='flex-1 min-w-0'>
+            <div>
               <h3 className='text-xl font-bold text-white truncate'>
                 {profile?.fullName}
               </h3>
