@@ -117,7 +117,7 @@ export default function Home() {
             animate='visible'
             exit='hidden'
             layout
-            className='w-full max-w-5xl flex flex-col gap-6'
+            className='w-full max-w-5xl flex flex-col gap-6 my-10'
           >
             {object?.map((item, index) => (
               <ProfileCard
@@ -145,7 +145,7 @@ export default function Home() {
               {!hasItems && (
                 <motion.div
                   key='input'
-                  className='w-full absolute bottom-[calc(100%+1.5rem)] left-1/2 -translate-x-1/2 z-20'
+                  className='w-full absolute bottom-[calc(100%+1.5rem)] sm:bottom-[calc(100%+1.5rem)] left-1/2 -translate-x-1/2 z-20'
                   transition={springTransition(isLoading ? 0.4 : 0)}
                   variants={{ visible, hidden }}
                   initial='hidden'
