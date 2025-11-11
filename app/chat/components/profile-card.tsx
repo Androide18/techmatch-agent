@@ -1,6 +1,6 @@
 'use client';
 
-import { profileSchema } from '@/app/api/search/schema';
+import { profileSchema } from '@/app/api/search-profiles/schema';
 import { z } from 'zod';
 import { useState } from 'react';
 import {

@@ -36,7 +36,7 @@ export function TechMatchInput({
     }
   };
 
-  const handlePlusClick = () => {
+  const handleFileClick = () => {
     // Trigger the hidden file input
     fileInputRef.current?.click();
   };
@@ -44,7 +44,6 @@ export function TechMatchInput({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFile(e.target.files[0]);
-      console.log('Selected file:', e.target.files[0]);
     }
   };
 
@@ -111,7 +110,7 @@ export function TechMatchInput({
 
       <div className='flex justify-between items-center'>
         <Tooltip>
-          <TooltipTrigger asChild onClick={handlePlusClick}>
+          <TooltipTrigger asChild onClick={handleFileClick}>
             <div
               className={cn(
                 'border cursor-pointer border-gray-600 rounded-full p-2 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_3px_0] hover:shadow-gray-400'
