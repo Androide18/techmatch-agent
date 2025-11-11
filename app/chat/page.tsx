@@ -140,12 +140,12 @@ export default function Home() {
         )}
 
         {!requestFinished && (
-          <div className='relative w-full h-full flex-col justify-end flex'>
+          <div className='relative w-full flex-1 flex flex-col'>
             <AnimatePresence>
               {!hasItems && (
                 <motion.div
                   key='input'
-                  className='w-full absolute bottom-[calc(100%)] left-1/2 -translate-x-1/2 z-20'
+                  className='w-full absolute bottom-[calc(100%+1.5rem)] left-1/2 -translate-x-1/2 z-20'
                   transition={springTransition(isLoading ? 0.4 : 0)}
                   variants={{ visible, hidden }}
                   initial='hidden'
@@ -173,6 +173,7 @@ export default function Home() {
                 </motion.div>
               )}
             </AnimatePresence>
+
             <AnimatePresence>
               {!isLoading && (
                 <motion.div
