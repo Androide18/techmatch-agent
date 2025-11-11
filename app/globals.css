@@ -216,6 +216,8 @@ body {
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
+  --default-transition-duration: 300ms;
+
   /* New Palette Colors */
   --palette-gray-light: #526069;
   --palette-gray-dark: #182a36;

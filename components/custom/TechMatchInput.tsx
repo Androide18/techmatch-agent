@@ -124,7 +124,7 @@ export function TechMatchInput({
               <TooltipTrigger asChild onClick={handleFileClick}>
                 <div
                   className={cn(
-                    'border cursor-pointer border-slate-600 rounded-full p-2 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_3px_0] hover:shadow-slate-400'
+                    'border cursor-pointer border-slate-600 rounded-full p-2 transition-all hover:scale-110 hover:shadow-[0_0_3px_0] hover:shadow-slate-400'
                   )}
                 >
                   <FilePlus size={20} className='text-slate-300' />
@@ -152,7 +152,7 @@ export function TechMatchInput({
                     }
                   }}
                   type='button'
-                  className='border cursor-pointer rounded-full p-2 transition-duration-300 border-slate-600 hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-slate-400 transition-all'
+                  className='border cursor-pointer rounded-full p-2 border-slate-600 hover:scale-110 hover:shadow-[0_0_5px_0] hover:shadow-slate-400 transition-all'
                   disabled={isProcessingPdf}
                 >
                   <Square size={20} className='text-slate-300' />
@@ -164,7 +164,7 @@ export function TechMatchInput({
                     onSubmit({ input: query, file: selectedFile || undefined })
                   }
                   className={cn(
-                    'border cursor-pointer border-slate-600 rounded-full p-2 transition-all duration-300',
+                    'border cursor-pointer border-slate-600 rounded-full p-2 transition-all',
                     isInputEmpty &&
                       'opacity-60 cursor-not-allowed hover:animate-shake',
                     !isProcessingPdf &&
