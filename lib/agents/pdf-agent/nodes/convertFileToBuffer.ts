@@ -1,10 +1,10 @@
-import { HRAgentNode, HRAgentStateType } from '../../hr-agent/graph';
+import { PdfAgentNode, PdfAgentStateType } from '../graph';
 
 export const convertFileToBuffer = async ({
   file,
 }: {
   file: File;
-}): Promise<HRAgentStateType> => {
+}): Promise<PdfAgentStateType> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
     const fileBuffer = Buffer.from(arrayBuffer);
@@ -14,7 +14,7 @@ export const convertFileToBuffer = async ({
     return {
       error: {
         reason: `Failed to convert file to buffer: ${(error as Error).message}`,
-        step: HRAgentNode.ConvertFileToBuffer,
+        step: PdfAgentNode.ConvertFileToBuffer,
       },
     };
   }

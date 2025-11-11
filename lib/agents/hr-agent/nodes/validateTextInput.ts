@@ -16,7 +16,7 @@ export const validateTextInput = async (
 
   const model = await getSelectedModelServer();
 
-  const { text } = await generateText({
+  const { text, usage } = await generateText({
     model,
     prompt: `You are validating user text input. The input must be referring to a software developer job description.
 If the input is valid, respond ONLY with "yes". If the input is invalid, respond with a brief reason why is not valid.
@@ -38,5 +38,12 @@ User Input: "${state.input}"`,
 
   return {
     validation: { isValid: true },
+    tokenUsage: {
+      ...state.tokenUsage,
+      inputTokens:
+        (state.tokenUsage?.inputTokens || 0) + (usage.inputTokens || 0),
+      outputTokens:
+        (state.tokenUsage?.outputTokens || 0) + (usage.outputTokens || 0),
+    },
   };
 };

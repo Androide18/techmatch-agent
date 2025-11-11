@@ -19,6 +19,7 @@ const HRAgentState = Annotation.Root({
   matchingProfiles: Annotation<Array<Profile>>(),
   context: Annotation<string>(),
   error: Annotation<{ reason: string; step: HRAgentNode }>(),
+  tokenUsage: Annotation<{ inputTokens: number; outputTokens: number }>(),
 });
 
 export type HRAgentStateType = Partial<typeof HRAgentState.State>;

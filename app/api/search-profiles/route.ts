@@ -19,11 +19,24 @@ export async function POST(req: Request) {
     const model = await getSelectedModelServer();
 
     // Now stream the response directly using AI SDK
-    const stream = streamObject({
+    const result = streamObject({
       model,
       output: 'array',
       schema: profileSchema,
       temperature: 0,
+      onFinish: ({ usage }) => {
+        // Store user query, response and token usage in DB
+        // use agentResult.tokenUsage + usage
+        console.log(
+          'input tokens',
+          agentResult.tokenUsage.inputTokens + (usage.inputTokens || 0)
+        );
+
+        console.log(
+          'output tokens',
+          agentResult.tokenUsage.outputTokens + (usage.outputTokens || 0)
+        );
+      },
       prompt: `Estructura la información de los siguientes perfiles de desarrolladores en formato JSON.
 
 Perfiles encontrados:
@@ -40,7 +53,7 @@ Reglas para estructurar la información:
     });
 
     // Return the stream in the format expected by useObject
-    return stream.toTextStreamResponse();
+    return result.toTextStreamResponse();
   } catch (error) {
     console.error('Error in search API:', error);
     return new Response(

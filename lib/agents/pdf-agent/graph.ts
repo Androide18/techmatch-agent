@@ -29,6 +29,7 @@ const PdfAgentState = Annotation.Root({
   >(),
   generatedPrompt: Annotation<string>(),
   error: Annotation<{ reason: string; step: PdfAgentNode }>(),
+  tokenUsage: Annotation<{ inputTokens: number; outputTokens: number }>(),
 });
 
 export type PdfAgentStateType = Partial<typeof PdfAgentState.State>;

@@ -2,14 +2,12 @@ import { generateText } from 'ai';
 import { getSelectedModelServer } from '@/lib/llm_model';
 import { PdfAgentNode, PdfAgentStateType } from '../graph';
 
-export const generatePromptFromPDF = async ({
-  fileBuffer,
-}: {
-  fileBuffer: Buffer;
-}): Promise<PdfAgentStateType> => {
+export const generatePromptFromPDF = async (
+  state: PdfAgentStateType
+): Promise<PdfAgentStateType> => {
   try {
     const model = await getSelectedModelServer();
-    const { text: generatedPrompt } = await generateText({
+    const { text: generatedPrompt, usage } = await generateText({
       model,
       messages: [
         {
@@ -21,7 +19,7 @@ export const generatePromptFromPDF = async ({
             },
             {
               type: 'file',
-              data: fileBuffer,
+              data: state.fileBuffer as Buffer,
               mediaType: 'application/pdf',
             },
           ],
@@ -31,7 +29,16 @@ export const generatePromptFromPDF = async ({
 
     const input = generatedPrompt.trim();
 
-    return { generatedPrompt: input };
+    return {
+      generatedPrompt: input,
+      tokenUsage: {
+        ...state.tokenUsage,
+        inputTokens:
+          (state.tokenUsage?.inputTokens || 0) + (usage.inputTokens || 0),
+        outputTokens:
+          (state.tokenUsage?.outputTokens || 0) + (usage.outputTokens || 0),
+      },
+    };
   } catch (error) {
     return {
       error: {

@@ -5,12 +5,18 @@ export const generateInputEmbedding = async (
   state: HRAgentStateType
 ): Promise<HRAgentStateType> => {
   try {
-    const inputEmbedding = await generateEmbedding({
+    const { embedding, usage } = await generateEmbedding({
       query: state.input!,
     });
 
     return {
-      inputEmbedding,
+      inputEmbedding: embedding,
+      tokenUsage: {
+        ...state.tokenUsage,
+        inputTokens: state.tokenUsage?.inputTokens || 0,
+        outputTokens:
+          (state.tokenUsage?.outputTokens || 0) + (usage.tokens || 0),
+      },
     };
   } catch (error) {
     return {
