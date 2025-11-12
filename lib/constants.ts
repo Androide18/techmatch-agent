@@ -5,4 +5,4 @@ export const ALLOWED_MIME_TYPES = ['application/pdf'];
 
 export const DEFAULT_LLM_MODEL_NAME = 'gemini-2.5-flash-lite' as LLM_MODEL;
 
-export const SIMILARITY_THRESHOLD = 0.7;
+export const SIMILARITY_THRESHOLD = 0.65;
