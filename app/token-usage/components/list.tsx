@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  hidden,
-  list,
-  profileList,
-  springTransition,
-  visible,
-} from '@/app/chat/animations';
+import { hidden, list, springTransition, visible } from '@/app/chat/animations';
 import { motion } from 'motion/react';
 import { QueryHistory } from '../page';
 import { LLM_MODEL, modelCost } from '@/lib/llm_model';
@@ -92,6 +86,10 @@ export const HistoryList = ({ items }: HistoryListProps) => {
                   item.output_tokens
                 ).toFixed(6)}
               </span>
+            </div>
+            <div>
+              <span className='text-gray-400'> Modelo utilizado: </span>
+              <span className='text-gray-300'>{item.model_used}</span>
             </div>
           </div>
         </motion.div>
