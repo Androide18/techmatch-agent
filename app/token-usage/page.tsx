@@ -10,8 +10,9 @@ import { Settings2 } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { modelCost, type LLM_MODEL } from '@/lib/llm_model';
+import { HistoryList } from './components/list';
 
-interface QueryHistory {
+export interface QueryHistory {
   id: number;
   query: string;
   response: string;
@@ -79,8 +80,8 @@ const TokenUsage = async () => {
   };
 
   return (
-    <div className='min-h-screen bg-bg p-8'>
-      <nav className='flex justify-between items-center w-full sticky top-0 z-20 bg-bg/60 backdrop-blur-lg p-4'>
+    <div className='min-h-screen bg-bg p-4'>
+      <nav className='max-w-7xl mx-auto flex justify-between items-center w-full z-20 bg-bg/60 backdrop-blur-lg px-4 mb-10'>
         <div>
           <h1 className='md:text-3xl text-2xl font-extrabold sirius-gradient inline-block bg-clip-text text-transparent font-inter tracking-tight'>
             TechMatch Bot
@@ -94,17 +95,15 @@ const TokenUsage = async () => {
           <DropdownMenu>
             <DropdownMenuTrigger className='uppercase font-medium text-slate-300 text-sm flex items-center gap-2 cursor-pointer hover:text-primary/90 transition-colors'>
               <Settings2 size={16} />
-              <span>Ajustes</span>
+              <span>Menu</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-              <DropdownMenuLabel className='uppercase'>
-                Ajustes
-              </DropdownMenuLabel>
+              <DropdownMenuLabel className='uppercase'>Menu</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href='/chat'>Chat</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href='/token-usage'>Uso de Tokens</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
@@ -122,47 +121,7 @@ const TokenUsage = async () => {
           <p className='text-gray-400'>No hay búsquedas registradas.</p>
         ) : (
           <div className='space-y-4'>
-            {sortedHistory.map((item) => (
-              <div
-                key={item.id}
-                className='bg-gray-800/50 border border-gray-700 rounded-lg p-4 hover:border-main-light-blue/50 transition-colors'
-              >
-                <div className='mb-3'>
-                  <h3 className='text-lg font-medium text-white truncate'>
-                    {item.query}
-                  </h3>
-                  <p className='text-sm text-gray-400 mt-1'>
-                    {formatDate(item.created_at)}
-                  </p>
-                </div>
-
-                <div className='flex flex-wrap gap-6 text-sm'>
-                  <div>
-                    <span className='text-gray-400'>Tokens de entrada: </span>
-                    <span className='text-main-light-blue font-semibold'>
-                      {item.input_tokens.toLocaleString()}
-                    </span>
-                  </div>
-                  <div>
-                    <span className='text-gray-400'>Tokens de salida: </span>
-                    <span className='text-pink font-semibold'>
-                      {item.output_tokens.toLocaleString()}
-                    </span>
-                  </div>
-                  <div>
-                    <span className='text-gray-400'>Costo aproximado: </span>
-                    <span className='text-green-400 font-semibold'>
-                      $
-                      {calculateCost(
-                        item.model_used,
-                        item.input_tokens,
-                        item.output_tokens
-                      ).toFixed(6)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <HistoryList items={sortedHistory} />
           </div>
         )}
       </div>

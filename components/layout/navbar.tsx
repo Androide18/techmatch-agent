@@ -22,7 +22,7 @@ export const Navbar = ({
   handleNewSearch,
 }: NavbarProps) => {
   return (
-    <nav className='flex justify-between items-center w-full sticky top-0 z-20 bg-bg/60 backdrop-blur-lg p-4'>
+    <nav className='max-w-7xl mx-auto flex justify-between items-center w-full sticky top-0 z-20 bg-bg/60 backdrop-blur-lg p-4'>
       <div>
         <h1 className='md:text-3xl text-2xl font-extrabold sirius-gradient inline-block bg-clip-text text-transparent font-inter tracking-tight'>
           TechMatch Bot
@@ -49,12 +49,12 @@ export const Navbar = ({
         <DropdownMenu>
           <DropdownMenuTrigger className='uppercase font-medium text-slate-300 text-sm flex items-center gap-2 cursor-pointer hover:text-primary/90 transition-colors'>
             <Settings2 size={16} />
-            <span>Ajustes</span>
+            <span>Menu</span>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel className='uppercase'>Ajustes</DropdownMenuLabel>
+            <DropdownMenuLabel className='uppercase'>Menu</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link href='/token-usage'>Uso de Tokens</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>

@@ -128,9 +128,9 @@ export default function Home() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -70, opacity: 0 }}
                     transition={springTransition()}
-                    className='text-3xl font-semibold text-balance selection:bg-primary selection:text-white'
+                    className='text-3xl font-semibold text-balance selection:bg-primary text-slate-200 selection:text-white'
                   >
-                    Busca el perfil justo para ese puesto
+                    Tu Asistente de Asignación de Talento con IA
                   </motion.h3>
                   <motion.p
                     initial={{ y: 70, opacity: 0 }}
