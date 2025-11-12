@@ -54,7 +54,7 @@ ${agentResult.context}
 Reglas para estructurar la información:
 - Solo puedes usar los perfiles que se encuentran en la lista anterior.
 - No puede inventar información de los perfiles si no está en la lista.
-- Describe cada perfil de manera concisa y clara, utilizando las habilidades y experiencia que se detallan en la lista anterior.
+- Si el campo "summary" está vacío, agrega un resumen de por qué el perfil es un buen candidato para el puesto. Intenta no listar las skills solamente. Utiliza el seniority y skills también para el resumen.
 - Devuelve un array de objetos JSON.
 - Cada objeto representa un perfil de desarrollador.
 - Si no hay perfiles, devuelve un array vacío: [].
