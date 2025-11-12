@@ -72,19 +72,19 @@ export async function GET() {
       );
     `;
 
-    // Create the table to track token usage
     await sql`
-  CREATE TABLE IF NOT EXISTS token_usage (
-    id SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT NOW(),
-    input_tokens INTEGER,
-    output_tokens INTEGER,
-    reasoning_tokens INTEGER,
-    total_tokens INTEGER,
-    source TEXT DEFAULT 'matching-profiles-api'
-);
-`;
-    logs.push("✓ Ensured 'token_usage' table exists.");
+    CREATE TABLE IF NOT EXISTS record_search (
+      id SERIAL PRIMARY KEY,
+      query TEXT,
+      response TEXT,
+      input_tokens INTEGER,
+      output_tokens INTEGER,
+      username TEXT default 'federico',
+      model_used TEXT default 'gemini-2.5-flash-lite',
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    `;
+    logs.push("✓ Ensured 'record_search' table exists.");
 
     // Check if table already existed or was created
     if (tableResult.command === 'CREATE') {

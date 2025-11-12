@@ -35,3 +35,9 @@ export function getSelectedModelClient() {
     ?.split('=')[1] as LLM_MODEL;
   return match ?? DEFAULT_LLM_MODEL_NAME;
 }
+
+export const modelCost = {
+  'gemini-2.5-flash-lite': { input: 0.1 / 1_000_000, output: 0.4 / 1_000_000 },
+  'gemini-2.5-flash': { input: 0.3 / 1_000_000, output: 2.5 / 1_000_000 },
+  'gemini-2.5-pro': { input: 1.25 / 1_000_000, output: 10 / 1_000_000 },
+};

@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
 
 interface NavbarProps {
   hasItems: boolean;
@@ -31,31 +32,35 @@ export const Navbar = ({
         </h2>
       </div>
 
-      {hasItems && (
-        <div className='flex items-center gap-10'>
-          {isLoading && (
-            <span className='flex items-center gap-2 text-gray-400'>
-              Evaluando Perfiles <Loader2 className='animate-spin' />
-            </span>
-          )}
-          <Button size='sm' disabled={isLoading} onClick={handleNewSearch}>
-            Realizar otra búsqueda
-          </Button>
-        </div>
-      )}
+      <div className='flex gap-4'>
+        {hasItems && (
+          <div className='flex items-center gap-10'>
+            {isLoading && (
+              <span className='flex items-center gap-2 text-gray-400'>
+                Evaluando Perfiles <Loader2 className='animate-spin' />
+              </span>
+            )}
+            <Button size='sm' disabled={isLoading} onClick={handleNewSearch}>
+              Realizar otra búsqueda
+            </Button>
+          </div>
+        )}
 
-      <DropdownMenu>
-        <DropdownMenuTrigger className='uppercase font-medium text-slate-300 text-sm flex items-center gap-2 cursor-pointer hover:text-primary/90 transition-colors'>
-          <Settings2 size={16} />
-          <span>Ajustes</span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='end'>
-          <DropdownMenuLabel className='uppercase'>Ajustes</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Uso de tokens</DropdownMenuItem>
-          <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger className='uppercase font-medium text-slate-300 text-sm flex items-center gap-2 cursor-pointer hover:text-primary/90 transition-colors'>
+            <Settings2 size={16} />
+            <span>Ajustes</span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuLabel className='uppercase'>Ajustes</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href='/token-usage'>Uso de Tokens</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>Cerrar sesión</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </nav>
   );
 };

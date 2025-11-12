@@ -2,6 +2,7 @@ import { hrAgent } from '@/lib/agents/hr-agent/graph';
 import { streamObject } from 'ai';
 import { getSelectedModelServer } from '@/lib/llm_model';
 import { profileSchema } from './schema';
+import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
   try {
@@ -24,18 +25,26 @@ export async function POST(req: Request) {
       output: 'array',
       schema: profileSchema,
       temperature: 0,
-      onFinish: ({ usage }) => {
-        // Store user query, response and token usage in DB
-        // use agentResult.tokenUsage + usage
-        console.log(
-          'input tokens',
-          agentResult.tokenUsage.inputTokens + (usage.inputTokens || 0)
-        );
+      onFinish: async ({ usage }) => {
+        const cookieStore = await cookies();
+        const sessionId = cookieStore.get('session');
 
-        console.log(
-          'output tokens',
-          agentResult.tokenUsage.outputTokens + (usage.outputTokens || 0)
-        );
+        fetch(`${process.env.API_BASE_URL}/record-search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: input,
+            response: agentResult.context,
+            inputTokens:
+              (agentResult.tokenUsage?.inputTokens || 0) +
+              (usage.inputTokens || 0),
+            outputTokens:
+              (agentResult.tokenUsage?.outputTokens || 0) +
+              (usage.outputTokens || 0),
+            username: sessionId ? sessionId.value.split('-')[0] : 'guest',
+            modelUsed: model.modelId,
+          }),
+        });
       },
       prompt: `Estructura la información de los siguientes perfiles de desarrolladores en formato JSON.
 

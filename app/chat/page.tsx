@@ -40,7 +40,6 @@ export default function Home() {
     schema: z.array(profileSchema),
     onFinish: () => {
       setRequestFinished(true);
-      fetchLatestTokenUsage();
     },
     onError: (error) => {
       toast.error(
@@ -108,20 +107,6 @@ export default function Home() {
     submit({ input });
   };
 
-  const fetchLatestTokenUsage = async () => {
-    try {
-      const response = await fetch('/api/token-usage');
-      if (response.ok) {
-        const data = await response.json();
-        setTokenSearchUsed(data.tokenUsage);
-      } else {
-        console.error('Failed to fetch latest token usage.');
-      }
-    } catch (error) {
-      console.error('Error fetching token usage:', error);
-    }
-  };
-
   return (
     <main className='w-full h-dvh'>
       <Navbar
@@ -130,8 +115,8 @@ export default function Home() {
         handleNewSearch={handleNewSearch}
       />
 
-      <div className='flex gap-2'>
-        <div className='py-6 px-4 gap-0 max-w-7xl mx-auto flex flex-col h-[calc(100vh-88px)] sm:h-[calc(100vh-92px)] relative'>
+      <div className='flex gap-2 w-full'>
+        <div className='py-6 px-4 gap-0 max-w-7xl mx-auto flex flex-col h-[calc(100vh-88px)] sm:h-[calc(100vh-92px)] w-full relative'>
           {/* Hero Section */}
 
           <motion.section className='flex-1 z-10 justify-center items-center gap-32 flex flex-col relative'>
@@ -257,7 +242,7 @@ export default function Home() {
             animate={{ opacity: 1.0 }}
             transition={{ delay: 0.95, duration: 1, ease: 'easeOut' }}
             className={cn(
-              'fixed top-60 -translate-x-2/5 left-1/2 flex flex-col items-center w-full'
+              'fixed top-60 -translate-x-1/2 left-1/2 flex flex-col items-center w-full'
             )}
           >
             <motion.div
