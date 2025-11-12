@@ -9,7 +9,6 @@ import {
 import { Settings2 } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { modelCost, type LLM_MODEL } from '@/lib/llm_model';
 import { HistoryList } from './components/list';
 
 export interface QueryHistory {
@@ -47,37 +46,6 @@ const TokenUsage = async () => {
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
-
-  // Format timestamp to readable format
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('es-ES', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  // Calculate cost based on model used and tokens
-  const calculateCost = (
-    modelUsed: string,
-    inputTokens: number,
-    outputTokens: number
-  ): number => {
-    const model = modelUsed as LLM_MODEL;
-    const costs = modelCost[model];
-
-    if (!costs) {
-      return 0; // Return 0 if model not found
-    }
-
-    const inputCost = inputTokens * costs.input;
-    const outputCost = outputTokens * costs.output;
-
-    return inputCost + outputCost;
-  };
 
   return (
     <div className='min-h-screen bg-bg p-4'>
